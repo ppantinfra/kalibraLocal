@@ -1,0 +1,136 @@
+variables:
+  IMAGE_TAG_BE: $CI_REGISTRY_IMAGE:be-$CI_COMMIT_REF_SLUG-$CI_COMMIT_SHORT_SHA-snapshot
+  IMAGE_TAG_FE: $CI_REGISTRY_IMAGE:fe-$CI_COMMIT_REF_SLUG-$CI_COMMIT_SHORT_SHA-snapshot
+  #DOCKER_TLS_CERTDIR: "/certs"
+  DOCKER_TLS_CERTDIR: ""
+  DOCKER_HOST: "tcp://docker:2375"
+  DOCKER_DRIVER: overlay2
+  REGION: us-west-2
+  USER_FILES_S3_BUCKET: test-kalibra-user-files
+  BACKEND_API_ENDPOINT: https://pro-stage.dev.kalibra.ai/api/
+  CHAT_FEATURE: "true"
+  PDF_UPLOAD_FEATURE: "true"
+  DEBUG_MODE: "true"
+services:
+  - name: docker:20.10.16-dind
+    command: ["--tls=false"]
+
+stages:          # List of stages for jobs, and their order of execution
+  - precheck
+  - build
+  - test
+  - deploy
+
+before_script:
+  - echo $IMAGE_TAG_FE
+pre-check:
+  image: node:16.13.1
+  stage: precheck
+  script:
+    - npm i
+    - npm run lint
+    - npm run build
+#    - eslint . || true
+#    - npm run prettier
+.build-and-push-docker-image-be:  # disabled
+  image: docker:20.10.16
+  stage: build
+  except:
+    - master
+    - tags
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - cd webbackend
+    - docker build -t $IMAGE_TAG_BE --label git-commit=$CI_COMMIT_SHORT_SHA --label made-by=gitlab-cicd --label job-url=$CI_JOB_URL .
+    - docker tag $IMAGE_TAG_BE $CI_REGISTRY_IMAGE:latest-be-$CI_COMMIT_REF_SLUG-snapshot
+    - docker push -q $IMAGE_TAG_BE
+    - docker push -q $CI_REGISTRY_IMAGE:latest-be-$CI_COMMIT_REF_SLUG-snapshot
+
+build-and-push-docker-image-fe:
+  image: docker:20.10.16
+  stage: build
+  except:
+    - master
+    - tags
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+#    - cd kalibra3prowebfe
+    - "sed -i '4 i \"homepage\": \"@PUBLIC_URL@\",' package.json"
+    - cat package.json
+    - docker build -t $IMAGE_TAG_FE --label git-commit=$CI_COMMIT_SHORT_SHA --label made-by=gitlab-cicd --label job-url=$CI_JOB_URL --build-arg PUBLIC_URL --build-arg REACT_APP_HANDSHAKE_API_KEY --build-arg REACT_APP_AWS_REGION --build-arg REACT_APP_COGNITO_USER_POOL_ID --build-arg REACT_APP_COGNITO_IDENTITY_POOL_ID --build-arg REACT_APP_COGNITO_USER_POOL_WEB_CLIENT_ID --build-arg REACT_APP_USER_FILES_S3_BUCKET --build-arg REACT_APP_BACKEND_API_ENDPOINT --build-arg REACT_APP_ONESIGNAL_APP_ID --build-arg REACT_APP_SLACK_WEB_HOOK_URL --build-arg REACT_APP_AMPLITUDE_API_KEY --build-arg DEBUG_MODE --build-arg REACT_APP_TERRA_DEV_ID --build-arg REACT_APP_TERRA_API_KEY .
+    - docker tag $IMAGE_TAG_FE $CI_REGISTRY_IMAGE:latest-fe-$CI_COMMIT_REF_SLUG-snapshot
+    - docker push -q $IMAGE_TAG_FE
+    - docker push -q $CI_REGISTRY_IMAGE:latest-fe-$CI_COMMIT_REF_SLUG-snapshot
+
+deploy-stage:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+      when: never
+    - if: '$CI_COMMIT_REF_NAME == "main"'
+    - when: manual
+      allow_failure: true
+  tags:
+    - deploy_stage
+  stage: deploy
+  variables:
+  #  IMAGE_TAG: cicd-test-d09e0cbc-snapshot  # TODO: REMOVE!
+    IMAGE_TAG: $CI_COMMIT_REF_SLUG-$CI_COMMIT_SHORT_SHA-snapshot
+    DOCKER_HOST: ""
+  script:
+#    - apk -q add iputils curl bind-tools git
+    - docker ps
+#    - docker network ls
+#    - docker network inspect stage >/dev/null 2>&1 || docker network create --driver bridge stage
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker pull -q $IMAGE_TAG_FE
+    - docker tag $IMAGE_TAG_FE frontend-pro:as-run
+    - docker rm -f frontend-pro-stage || true
+#    - docker run -d --rm --name frontend-pro-stage -p 127.0.0.1:5050:5000 --log-driver=gelf --log-opt gelf-address=tcp://127.0.0.1:12201 -e PUBLIC_URL -e AWS_REGION -e COGNITO_USER_POOL_ID -e COGNITO_IDENTITY_POOL_ID -e COGNITO_USER_POOL_WEB_CLIENT_ID -e USER_FILES_S3_BUCKET -e BACKEND_API_ENDPOINT -e ONESIGNAL_APP_ID -e SLACK_WEB_HOOK_URL -e AMPLITUDE_API_KEY -e CHAT_FEATURE -e PDF_UPLOAD_FEATURE -e DEBUG_MODE $IMAGE_TAG_FE
+    - docker run -d --rm --name frontend-pro-stage -p 127.0.0.1:5050:5000 --log-driver=gelf --log-opt gelf-address=tcp://127.0.0.1:12201 -e WDS_SOCKET_PORT=443 -e PUBLIC_URL -e REACT_APP_SSR=true -e PORT=5000 -e REACT_APP_AWS_REGION=$REACT_APP_AWS_REGION -e REACT_APP_COGNITO_USER_POOL_ID=$REACT_APP_COGNITO_USER_POOL_ID -e REACT_APP_COGNITO_IDENTITY_POOL_ID=$REACT_APP_COGNITO_IDENTITY_POOL_ID -e REACT_APP_COGNITO_USER_POOL_WEB_CLIENT_ID=$REACT_APP_COGNITO_USER_POOL_WEB_CLIENT_ID -e REACT_APP_TERRA_DEV_ID -e REACT_APP_TERRA_API_KEY -e REACT_APP_HANDSHAKE_API_KEY -e REACT_APP_USER_FILES_S3_BUCKET=$REACT_APP_USER_FILES_S3_BUCKET -e REACT_APP_BACKEND_API_ENDPOINT=$REACT_APP_BACKEND_PRO_API_ENDPOINT -e REACT_APP_ONESIGNAL_APP_ID=$REACT_APP_ONESIGNAL_APP_ID -e REACT_APP_SLACK_WEB_HOOK_URL=$REACT_APP_SLACK_WEB_HOOK_URL -e REACT_APP_AMPLITUDE_API_KEY=$REACT_APP_AMPLITUDE_API_KEY -e REACT_APP_DEBUG_MODE=$REACT_APP_DEBUG_MODE $IMAGE_TAG_FE sh -c "npm run build && npm run deploy"
+    - sleep 20
+    - docker logs frontend-pro-stage
+
+sonarqube-check:
+  stage: precheck
+  image:
+    name: sonarsource/sonar-scanner-cli:latest
+    entrypoint: [""]
+  variables:
+    SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"
+    GIT_DEPTH: "0"
+  cache:
+    key: "${CI_JOB_NAME}"
+    paths:
+      - .sonar/cache
+  script:
+    - sonar-scanner
+  allow_failure: true
+#  only:
+#    - main
+
+deploy-preprod:
+    stage: deploy
+    inherit:
+      variables: false    
+    variables: 
+        AUTOSTART: "true"
+    trigger:
+        project: 'zarubind/deploy-preprod'
+    only:
+        - preprod
+
+pro-ui-test:
+    stage: test
+    needs: ["build-and-push-docker-image-fe"]
+    except:
+      - tags
+    inherit:
+      variables: false    
+    allow_failure: true
+    variables: 
+      IMAGE_TAG: fe-$CI_COMMIT_REF_SLUG-$CI_COMMIT_SHORT_SHA-snapshot
+      NETWORK: prouitest-triggered-$CI_COMMIT_SHORT_SHA-$CI_PIPELINE_ID
+    trigger:
+      project: 'frontend/pro-ui-autotest'
+      strategy: depend
+
