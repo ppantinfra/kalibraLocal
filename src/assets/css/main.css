@@ -2028,3 +2028,54 @@ color: #222B45;
 .css-kcnnn4-MuiButtonBase-root-MuiPickersDay-root.Mui-selected {
   border: 1px solid rgba(0, 0, 0, 0.6);
 }
+@media (max-width:992px){
+  .responive-mobility-responsive{
+    margin-top: 20px;
+  }
+  .enduranceTopData span{
+    font-size:12px;
+  }
+  .responive-mobility-responsive{
+    flex-direction: row;
+  }
+  
+}
+@media (min-width:768px) and (max-width:991px) {
+  .enduranceProgress{
+    max-width: 90%;
+  }
+  .enduranceProgress p{
+    padding-right: 5px;
+  }
+  .circularProgressBoxWidth{
+    max-width: 100px;
+  }
+}
+@media (max-width:767.5px) {
+  .enduranceProgress{
+    max-width: 90%;
+  }
+  .strengthMain .enduranceProgress .scoreDriveProgressBar{
+    width: 75%;
+  }
+  .circularProgressBoxWidth{
+    max-width: 100px;
+  }
+
+
+}
+@media (max-width: 501px) {
+  .enduranceProgress{
+    max-width: 146px;
+  }
+  .responive-mobility-responsive{
+    flex-direction: column;
+  }
+  .responive-mobility-column{
+    width: 100% !important;
+    margin-bottom: 40px;
+  }
+  .responive-mobility-column:last-child{
+    margin-bottom: 0;
+  }
+}

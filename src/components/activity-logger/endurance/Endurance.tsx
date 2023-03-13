@@ -113,7 +113,7 @@ const Endurance = ({ clientId }: Iprops) => {
                         <Grid item className={'strengthGrid-2 strengthGrid-2-height'} >
                             {selectedPillar &&
                                 <TilesView boxClass='strengthRightBox' title={<span className='font-weight-normal d-flex align-items-center'> <img src={imageHeadingIcon} className='mr-2' /> <p style={{ fontSize: '11px' }}>Focus should be on <strong>Full Body</strong> and <strong>Push-to-pull</strong> as Endurance Scores are low</p> </span>} category="Move">
-                                    <div className='d-flex  mt-5 responive-mobility'>
+                                    <div className='d-flex  mt-5 responive-mobility responive-mobility-responsive'>
 
                                         {selectedPillar?.chartData.length > 0 &&
                                             <>
@@ -122,7 +122,7 @@ const Endurance = ({ clientId }: Iprops) => {
 
                                                     return (
                                                         <>
-                                                            <div style={{ width: `${100 / selectedPillar?.chartData.length}%` }}>
+                                                            <div className='responive-mobility-column' style={{ width: `${100 / selectedPillar?.chartData.length}%` }}>
                                                                 <EnduranceProgressBar chartData={selectedChart} />
                                                             </div>
                                                         </>
