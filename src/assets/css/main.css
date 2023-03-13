@@ -1830,11 +1830,17 @@ color: #222B45;
 }
 .enduranceProgress p{
   width: auto;
+  overflow: visible;
 }
 .enduranceTopData{
   display: flex;
   justify-content: center;
   margin-bottom: 30px;
+  align-items: center;
+  min-height: 40px;
+}
+.responive-mobility-responsive{
+  align-items: center;
 }
 .enduranceTopData span{
   font-size: 14px;
@@ -1850,6 +1856,7 @@ color: #222B45;
 
 .strengthMain .enduranceProgress .scoreDriveProgressBar{
   width: 80%;
+  margin-left: 5px;
 }
 
 
