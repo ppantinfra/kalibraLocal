@@ -2047,7 +2047,7 @@ color: #222B45;
   .enduranceProgress p{
     padding-right: 5px;
   }
-  .circularProgressBoxWidth{
+  .circularProgressBoxWidth > div{
     max-width: 100px;
   }
 }
@@ -2058,7 +2058,7 @@ color: #222B45;
   .strengthMain .enduranceProgress .scoreDriveProgressBar{
     width: 75%;
   }
-  .circularProgressBoxWidth{
+  .circularProgressBoxWidth >div{
     max-width: 100px;
   }
 

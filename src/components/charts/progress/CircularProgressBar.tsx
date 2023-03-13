@@ -32,8 +32,7 @@ const useStyles = makeStyles({
 const CircularProgressBar = ({ strokeWidth, backgroundPadding, progressValue, pathColor, progressText }) => {
   const classes = useStyles();
   return (
-    <Box sx={{ height: 124, width: 124, margin: 'auto' }} className= {`${classes.circularProgressBox}  circularProgressBoxWidth`    }
-    >
+    <Box sx={{ height: 124, width: 124, margin: 'auto' }} className={classes.circularProgressBox}>
       <CircularProgressbarWithChildren
         strokeWidth={strokeWidth}
         backgroundPadding={backgroundPadding}

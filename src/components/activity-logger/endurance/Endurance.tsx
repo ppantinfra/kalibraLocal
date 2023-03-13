@@ -6,7 +6,19 @@ import { TilesView } from '../../tiles';
 import Grid from '@mui/material/Grid';
 import imageHeadingIcon from '../../../assets/images/activity-log/strength/imageHeadingIcon.svg';
 import EnduranceScoreChart from './EnduranceScoreChart';
-import minsIcon from '../../../assets/images/activity-log/endurance/mins.svg';
+import rowIcon from '../../../assets/images/activity-log/endurance/row.png';
+import runIcon from '../../../assets/images/activity-log/endurance/run.png';
+import wattBikeIcon from '../../../assets/images/activity-log/endurance/wattBike.png';
+import burpeesIcon from '../../../assets/images/activity-log/endurance/burpees.png';
+import jacksIcon from '../../../assets/images/activity-log/endurance/jacks.png';
+import bodyHoldIcon from '../../../assets/images/activity-log/endurance/bodyHold.png';
+import pushUpsIcon from '../../../assets/images/activity-log/endurance/pushUps.png';
+import modPushUpsIcon from '../../../assets/images/activity-log/endurance/modPushUps.png';
+import handStandIcon from '../../../assets/images/activity-log/endurance/handStand.png';
+import pullUpsIcon from '../../../assets/images/activity-log/endurance/pullUps.png';
+import ausPullUpsIcon from '../../../assets/images/activity-log/endurance/ausPullUps.png';
+import modAusPullUpsIcon from '../../../assets/images/activity-log/endurance/modAusPullUps.png';
+import pushToPullRatioIcon from '../../../assets/images/activity-log/endurance/pushToPullRatio.png';
 import EnduranceProgressBar, { EnduranceProgressBarType } from './EnduranceProgressBar';
 type Iprops = {
     clientId: any;
@@ -39,36 +51,35 @@ const Endurance = ({ clientId }: Iprops) => {
         const PushToPullScore = 21;
 
         const cardioChartData: EnduranceProgressBarType[] = [
-            { headingIcon: minsIcon, headingText: '2 Km Row', progressValue: 34, progressColor: '#46D7CB', progressText: 'Score', scoreProgressLabel: 'Mins', scoreProgressDone: 25 },
-            { headingIcon: minsIcon, headingText: '2 Km Row', progressValue: 34, progressColor: '#46D7CB', progressText: 'Score', scoreProgressLabel: 'Mins', scoreProgressDone: 25 },
-            { headingIcon: minsIcon, headingText: '2 Km Row', progressValue: 34, progressColor: '#46D7CB', progressText: 'Score', scoreProgressLabel: 'Mins', scoreProgressDone: 25 },
+            { headingIcon: rowIcon, headingText: '2 Km Row', progressValue: 34, progressColor: '#46D7CB', progressText: 'Score', scoreProgressLabel: 'Mins', scoreProgressDone: 25 },
+            { headingIcon: runIcon, headingText: '12 Min Run', progressValue: 58, progressColor: '#46D7CB', progressText: 'Score', scoreProgressLabel: 'Meters', scoreProgressDone: 4028 },
+            { headingIcon: wattBikeIcon, headingText: '3 Min WattBike', progressValue: 86, progressColor: '#46D7CB', progressText: 'Score', scoreProgressLabel: 'Watts', scoreProgressDone: 923 },
         ];
 
         const fullBodyChartData: EnduranceProgressBarType[] = [
-            { headingIcon: minsIcon, headingText: '2 Km Row', progressValue: 34, progressColor: '#46D7CB', progressText: 'Score', scoreProgressLabel: 'Mins', scoreProgressDone: 25 },
-            { headingIcon: minsIcon, headingText: '2 Km Row', progressValue: 34, progressColor: '#46D7CB', progressText: 'Score', scoreProgressLabel: 'Mins', scoreProgressDone: 25 },
+            { headingIcon: burpeesIcon, headingText: '2 Min Burpees', progressValue: 62, progressColor: '#46D7CB', progressText: 'Score', scoreProgressLabel: 'Count', scoreProgressDone: 62 },
+            { headingIcon: jacksIcon, headingText: '1 Min J Jacks', progressValue: 83, progressColor: '#46D7CB', progressText: 'Score', scoreProgressLabel: 'Count', scoreProgressDone: 83 },
         ];
 
         const coreChartData: EnduranceProgressBarType[] = [
-            { headingIcon: minsIcon, headingText: '2 Km Row', progressValue: 34, progressColor: '#46D7CB', progressText: 'Score', scoreProgressLabel: 'Mins', scoreProgressDone: 25 },
+            { headingIcon: bodyHoldIcon, headingText: 'Body Hold', progressValue: 79, progressColor: '#46D7CB', progressText: 'Score', scoreProgressLabel: 'Seconds', scoreProgressDone: 462 },
         ];
 
         const pushChartData: EnduranceProgressBarType[] = [
-            { headingIcon: minsIcon, headingText: '2 Km Row', progressValue: 34, progressColor: '#46D7CB', progressText: 'Score', scoreProgressLabel: 'Mins', scoreProgressDone: 25 },
-            { headingIcon: minsIcon, headingText: '2 Km Row', progressValue: 34, progressColor: '#46D7CB', progressText: 'Score', scoreProgressLabel: 'Mins', scoreProgressDone: 25 },
-            { headingIcon: minsIcon, headingText: '2 Km Row', progressValue: 34, progressColor: '#46D7CB', progressText: 'Score', scoreProgressLabel: 'Mins', scoreProgressDone: 25 },
+            { headingIcon: pushUpsIcon, headingText: 'Push Ups', progressValue: 34, progressColor: '#46D7CB', progressText: 'Score', scoreProgressLabel: 'Count', scoreProgressDone: 25 },
+            { headingIcon: modPushUpsIcon, headingText: 'Mod. Push Ups', progressValue: 58, progressColor: '#46D7CB', progressText: 'Score', scoreProgressLabel: 'Count', scoreProgressDone: 4028 },
+            { headingIcon: handStandIcon, headingText: 'Handstand', progressValue: 86, progressColor: '#46D7CB', progressText: 'Score', scoreProgressLabel: 'Seconds', scoreProgressDone: 923 },
         ];
 
         const pullChartData: EnduranceProgressBarType[] = [
-            { headingIcon: minsIcon, headingText: '2 Km Row', progressValue: 34, progressColor: '#46D7CB', progressText: 'Score', scoreProgressLabel: 'Mins', scoreProgressDone: 25 },
-            { headingIcon: minsIcon, headingText: '2 Km Row', progressValue: 34, progressColor: '#46D7CB', progressText: 'Score', scoreProgressLabel: 'Mins', scoreProgressDone: 25 },
-            { headingIcon: minsIcon, headingText: '2 Km Row', progressValue: 34, progressColor: '#46D7CB', progressText: 'Score', scoreProgressLabel: 'Mins', scoreProgressDone: 25 },
+            { headingIcon: pullUpsIcon, headingText: 'Pull Ups', progressValue: 34, progressColor: '#46D7CB', progressText: 'Score', scoreProgressLabel: 'Count', scoreProgressDone: 25 },
+            { headingIcon: ausPullUpsIcon, headingText: 'Aus. Pull Ups', progressValue: 58, progressColor: '#46D7CB', progressText: 'Score', scoreProgressLabel: 'Count', scoreProgressDone: 4028 },
+            { headingIcon: modAusPullUpsIcon, headingText: 'Mod. Aus. Pull Ups', progressValue: 86, progressColor: '#46D7CB', progressText: 'Score', scoreProgressLabel: 'Seconds', scoreProgressDone: 923 },
         ];
 
         const pushToPullChartData: EnduranceProgressBarType[] = [
-            { headingIcon: minsIcon, headingText: '2 Km Row', progressValue: 34, progressColor: '#46D7CB', progressText: 'Score', scoreProgressLabel: 'Mins', scoreProgressDone: 25 },
+            { headingIcon: pushToPullRatioIcon, headingText: 'Push-to-Pull Ratio', progressValue: 79, progressColor: '#46D7CB', progressText: 'Score', scoreProgressLabel: 'Ratio', scoreProgressDone: 462 },
         ];
-
 
         const pillars = [
             { 'id': 1, 'name': 'Cardio', 'score': cardioScore, chartData: cardioChartData },
@@ -78,11 +89,7 @@ const Endurance = ({ clientId }: Iprops) => {
             { 'id': 5, 'name': 'Pull', 'score': pullScore, chartData: pullChartData },
             { 'id': 6, 'name': 'Push-to-pull', 'score': PushToPullScore, chartData: pushToPullChartData }];
 
-
         setPillarScores(pillars);
-
-
-
     };
 
     useEffect(() => {
