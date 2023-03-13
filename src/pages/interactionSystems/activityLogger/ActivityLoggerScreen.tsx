@@ -183,7 +183,7 @@ const ActivityLoggerScreen = () => {
                 </TabPanel>
 
                 <TabPanel value={'endurance'} className={classes.tabPanel}>
-                  <Endurance />
+                  <Endurance clientId={selectedUserId}/>
                 </TabPanel>
               </TabContext>
             </Box>

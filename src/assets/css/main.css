@@ -1824,7 +1824,33 @@ color: #222B45;
 .padding-left{
   padding-left: 12%;
 }
+.enduranceProgress {
+  max-width: 146px;
+  margin:0 auto;
+}
+.enduranceProgress p{
+  width: auto;
+}
+.enduranceTopData{
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+.enduranceTopData span{
+  font-size: 14px;
+  display: inline-block;
+  margin-left: 10px;
+  font-weight: 600;
+  color: #222B45;
+  line-height: 24px;
+}
+.strengthGrid-2-height .strengthRightBox{
+  height:100%;
+}
 
+.strengthMain .enduranceProgress .scoreDriveProgressBar{
+  width: 80%;
+}
 
 
 @media (max-width: 1920px) {
@@ -2002,5 +2028,3 @@ color: #222B45;
 .css-kcnnn4-MuiButtonBase-root-MuiPickersDay-root.Mui-selected {
   border: 1px solid rgba(0, 0, 0, 0.6);
 }
-
-

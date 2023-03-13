@@ -140,11 +140,15 @@ const ScoreLineChart = ({ chartData }: Props) => {
           callback: function (val, index) {
             if (unit === 'week') {
               return index % 4 === 0 ? convertDateFormat(val) : '';
-            } else if (unit === 'month') {
-              return convertDateFormat(val);
-            } else if (unit === 'year') {
-              return moment(new Date(val)).format('YYYY');
+            } else {
+              return val;
             }
+
+            // else if (unit === 'month') {
+            //   return convertDateFormat(val);
+            // } else if (unit === 'year') {
+            //   return moment(new Date(val)).format('YYYY');
+            // }
           },
         },
       },

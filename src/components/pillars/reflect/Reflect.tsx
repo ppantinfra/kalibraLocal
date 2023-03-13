@@ -95,27 +95,52 @@ const Reflect = ({ userId, catId }: ReflectProps) => {
     }
   ];
 
+  // const getUserScoreHistory = async (id: string, categoryId: string) => {
+  //   try {
+  //     await UserService.getUserScoreHistory(id, categoryId)
+  //       .then((res: any) => {
+  //         if (res.data.scores?.length > 0) {
+  //           const chartData = ScoreHelper.generateChartData(res.data, 'reflect');
+  //           setScoreChartData(chartData);
+  //           const driverData = ScoreHelper.generateScoreDriverChartData(res.data);
+  //           setScoreDriverData(driverData);
+  //         }
+  //         //   setIsError(true);
+  //         //   setOpenSnackBar(true);
+  //         //   setSnackBarMessage('Can\t get client\'s data!');
+  //       })
+  //       .catch((err: any) => {
+  //         console.error(err);
+  //         // setIsError(true);
+  //         // setSnackBarMessage(err.message);
+  //       });
+  //   } catch (error) {
+  //     //  console.log(error);
+  //   }
+  // };
+
+
   const getUserScoreHistory = async (id: string, categoryId: string) => {
     try {
-      await UserService.getUserScoreHistory(id, categoryId)
-        .then((res: any) => {
-          if (res.data.scores?.length > 0) {
-            const chartData = ScoreHelper.generateChartData(res.data, 'reflect');
-            setScoreChartData(chartData);
-            const driverData = ScoreHelper.generateScoreDriverChartData(res.data);
-            setScoreDriverData(driverData);
-          }
-          //   setIsError(true);
-          //   setOpenSnackBar(true);
-          //   setSnackBarMessage('Can\t get client\'s data!');
-        })
+      // await UserService.getUserScoreHistory(id, categoryId)
+      await Promise.all([
+        UserService.getUserScoreHistory(id, categoryId),
+        UserService.getUserScoreSubHistory(id, categoryId)
+      ]).then(([res, subRes]) => {
+        if (res.length > 0) {
+          const chartData = ScoreHelper.generateChartData(res, 'reflect');
+          setScoreChartData(chartData);
+        }
+        if (subRes.length > 0) {
+          const driverData = ScoreHelper.generateScoreDriverChartData(subRes);
+          setScoreDriverData(driverData);
+        }
+      })
         .catch((err: any) => {
           console.error(err);
-          // setIsError(true);
-          // setSnackBarMessage(err.message);
         });
     } catch (error) {
-      //  console.log(error);
+      //console.log(error);
     }
   };
 

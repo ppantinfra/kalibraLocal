@@ -62,22 +62,47 @@ const Nourish = ({ userId, allTilesData, catId }: NourishProps) => {
   };
   const { demoMode } = useContext(CommonContext) as CommonContextType;
 
+  // const getUserScoreHistory = async (id: string, categoryId: string) => {
+  //   try {
+  //     await UserService.getUserScoreHistory(id, categoryId)
+  //       .then((res: any) => {
+  //         if (res.data.scores?.length > 0) {
+  //           const scoreData = ScoreHelper.generateChartData(res.data, 'nourish');
+  //           setScoreChartData(scoreData);
+  //           const driverData = ScoreHelper.generateScoreDriverChartData(res.data);
+  //           setScoreDriverData(driverData);
+  //         }
+  //       })
+  //       .catch((err: any) => {
+  //         console.error(err);
+  //       });
+  //   } catch (error) {
+  //     console.error(error);
+  //     //console.log(error);
+  //   }
+  // };
+
+
   const getUserScoreHistory = async (id: string, categoryId: string) => {
     try {
-      await UserService.getUserScoreHistory(id, categoryId)
-        .then((res: any) => {
-          if (res.data.scores?.length > 0) {
-            const scoreData = ScoreHelper.generateChartData(res.data, 'nourish');
-            setScoreChartData(scoreData);
-            const driverData = ScoreHelper.generateScoreDriverChartData(res.data);
-            setScoreDriverData(driverData);
-          }
-        })
+      // await UserService.getUserScoreHistory(id, categoryId)
+      await Promise.all([
+        UserService.getUserScoreHistory(id, categoryId),
+        UserService.getUserScoreSubHistory(id, categoryId)
+      ]).then(([res, subRes]) => {
+        if (res.length > 0) {
+          const chartData = ScoreHelper.generateChartData(res, 'nourish');
+          setScoreChartData(chartData);
+        }
+        if (subRes.length > 0) {
+          const driverData = ScoreHelper.generateScoreDriverChartData(subRes);
+          setScoreDriverData(driverData);
+        }
+      })
         .catch((err: any) => {
           console.error(err);
         });
     } catch (error) {
-      console.error(error);
       //console.log(error);
     }
   };

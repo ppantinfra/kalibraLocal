@@ -412,10 +412,16 @@ const ScoreDriversProgressBarView = ({ data, category }: Props) => {
   const [selectedSubCat, setSelectedSubCat] = React.useState('');
   const [showPillarInfo, setShownPillarInfo] = React.useState(false);
   const Progress = ({ done, isLoaded }: any) => {
+
+    const calculateWidth = (donePerc: number) => {
+      const totalLength = donePerc.toString().length;
+      const divider = Number(String(1).padEnd(totalLength + 1, '0'));
+      return Math.round(donePerc / divider * 100) + '%';
+    };
     const [style, setStyle] = React.useState({});
     const progresStyle = {
       opacity: 1,
-      width: done <= 7 ? '7%' : `${done}%`,
+      width: done <= 7 ? '7%' : done > 7 && done <= 100 ? `${done}%` : calculateWidth(done),
       backgroundColor: done <= 0 ? '#C5CEE0' : ColorHelper.getBarColor('teal', String(category)),
     };
     let loadedStyle = {};

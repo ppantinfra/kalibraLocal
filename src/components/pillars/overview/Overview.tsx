@@ -49,41 +49,67 @@ const Overview = ({ toggleRightDrawer, clientId, allTilesData }: ClientDashboard
     //console.log('share');
   };
 
-  const getUserScore = async (id: string) => {
-    try {
-      await UserService.getUserScore(id)
-        .then((res: any) => {
-          if (res.data.categories?.length > 0) {
-            const mainScores: Array<PillarScore> = [];
-            const orderedPillars = ['rest', 'nourish', 'move', 'connect', 'grow', 'reflect'];
-            for (const pillarName of orderedPillars) {
-              res.data.categories.forEach((element) => {
-                if (String(element.name).toLowerCase() === pillarName) {
-                  const score: PillarScore = {
-                    id: element.id,
-                    name: element.name,
-                    score: element.scores[0].score
-                  };
-                  mainScores.push(score);
-                }
-              });
-            }
-            setPillarScores(mainScores);
-          }
 
-          if (res.data.scores?.length > 0) {
-            setKaliScore(res.data.scores[0].score);
-          }
-        })
-        .catch((err: any) => {
-          console.error(err);
-          // setIsError(true);
-          // setSnackBarMessage(err.message);
-        });
-    } catch (error) {
-      // console.log(error);
-    }
+  const getUserScore = async (id: string) => {
+    await Promise.all([
+      UserService.getUserScoreDetails(id),
+      UserService.getUserScoreTotal(id)
+    ]).then(([res, totalScoreRes]) => {
+      if (res && res.length > 0) {
+        const mainScores: Array<PillarScore> = [];
+        for (const data of res) {
+          const score: PillarScore = {
+            id: data?.id,
+            name: data?.externalKey,
+            score: data?.score
+          };
+          mainScores.push(score);
+        }
+        setPillarScores(mainScores);
+      }
+      if (totalScoreRes) {
+        setKaliScore(totalScoreRes?.score);
+      }
+
+    });
+
   };
+
+  // const getUserScore = async (id: string) => {
+  //   try {
+  //     await UserService.getUserScore(id)
+  //       .then((res: any) => {
+  //         if (res.data.categories?.length > 0) {
+  //           const mainScores: Array<PillarScore> = [];
+  //           const orderedPillars = ['rest', 'nourish', 'move', 'connect', 'grow', 'reflect'];
+  //           for (const pillarName of orderedPillars) {
+  //             res.data.categories.forEach((element) => {
+  //               if (String(element.name).toLowerCase() === pillarName) {
+  //                 const score: PillarScore = {
+  //                   id: element.id,
+  //                   name: element.name,
+  //                   score: element.scores[0].score
+  //                 };
+  //                 mainScores.push(score);
+  //               }
+  //             });
+  //           }
+  //           setPillarScores(mainScores);
+  //         }
+
+  //         if (res.data.scores?.length > 0) {
+  //           setKaliScore(res.data.scores[0].score);
+  //         }
+  //       })
+  //       .catch((err: any) => {
+  //         console.error(err);
+  //         // setIsError(true);
+  //         // setSnackBarMessage(err.message);
+  //       });
+  //   } catch (error) {
+  //     // console.log(error);
+  //   }
+  // };
 
   useEffect(() => {
     if (clientId) {

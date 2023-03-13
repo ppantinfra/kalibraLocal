@@ -15,7 +15,10 @@ const AssessmentHealthMarkerUrl = '/health-markers/report/inputs';
 const AddAssessmentUrl = '/pro/health-markers/report';
 const AssessmentDetailsViewUrl = '/pro/health-markers/report-new/id';
 const UserDashboardUrl = '/pro/dashboard';
-const ScoreUrl = '/pro/scores';
+const ScoreUrl = '/pro/client-overview/score-category';
+const ScoreTotalUrl = '/pro/client-overview/score-total';
+const ScoreSubCategoryUrl = '/pro/client-overview/score-subcategory/latest-score';
+const ScoreCategoryUrl = '/pro/client-overview/score-category/history';
 const ScoreHistoryUrl = '/pro/scores/history';
 const HealthMarkerScoreHistoryUrl = 'pro/health-markers/user';
 const AssessmentListing = '/pro/health-markers/data/user-assessments';
@@ -42,5 +45,5 @@ export const ApiUrl = {
     AddAssessmentUrl, AssessmentDetailsViewUrl, UserDashboardUrl, ScoreHistoryUrl, AssessmentListing, ScoreUrl, HealthMarkerScoreHistoryUrl,
     CompareMeasurement, AddUserUrl, ManageClientListUrl, CheckEmailExistUrl, InviteUserUrl, InviteDataSharingUrl, UpdateClientStatusUrl,
     InactiveClientListUrl, ManageOrganizationListUrl, UpdateRoleUrl, DeleteUserFromOrganizationUrl, AddRemoveUserToOrganizaionUrl,
-    CheckOrganizationEmailExistUrl, AddNewUserToOrganizationUrl, MyUsersListUrl, ResendOTPCode
+    CheckOrganizationEmailExistUrl, AddNewUserToOrganizationUrl, MyUsersListUrl, ResendOTPCode, ScoreTotalUrl, ScoreCategoryUrl, ScoreSubCategoryUrl
 };

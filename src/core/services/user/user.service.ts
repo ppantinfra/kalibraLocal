@@ -105,9 +105,19 @@ const updateProfileDetails = (data: IClient) => {
   return BackendApi.patch<IClient>('/pro/user', data);
 };
 
+// const getUserScoreHistory = async (clientId: string, categoryId: string) => {
+//   const res = await BackendApi.get(`${ApiUrl.ScoreHistoryUrl}/category/${clientId}/${categoryId}`);
+//   return res;
+// };
+
 const getUserScoreHistory = async (clientId: string, categoryId: string) => {
-  const res = await BackendApi.get(`${ApiUrl.ScoreHistoryUrl}/category/${clientId}/${categoryId}`);
-  return res;
+  const res = await BackendApi.get(`${ApiUrl.ScoreCategoryUrl}/${clientId}/${categoryId}`);
+  return res?.data;
+};
+
+const getUserScoreSubHistory = async (clientId: string, categoryId: string) => {
+  const res = await BackendApi.get(`${ApiUrl.ScoreSubCategoryUrl}/${clientId}/${categoryId}`);
+  return res?.data;
 };
 
 const getUserHealMarkerScoreHistory = async (clientId: string, externalKey: string, parameters: any) => {
@@ -117,9 +127,19 @@ const getUserHealMarkerScoreHistory = async (clientId: string, externalKey: stri
   return res;
 };
 
-const getUserScore = async (clientId: string) => {
+// const getUserScore = async (clientId: string) => {
+//   const res = await BackendApi.get(`${ApiUrl.ScoreUrl}/${clientId}`);
+//   return res;
+// };
+
+const getUserScoreDetails = async (clientId: string) => {
   const res = await BackendApi.get(`${ApiUrl.ScoreUrl}/${clientId}`);
-  return res;
+  return res?.data;
+};
+
+const getUserScoreTotal = async (clientId: string) => {
+  const res = await BackendApi.get(`${ApiUrl.ScoreTotalUrl}/${clientId}`);
+  return res?.data;
 };
 
 const getUserAssessmentList = async (clientId: string) => {
@@ -232,7 +252,8 @@ const UserService = {
   updateProfileDetails,
   getClientHealthMarkers,
   getUserScoreHistory,
-  getUserScore,
+  getUserScoreDetails,
+  getUserScoreTotal,
   getUserAssessmentList,
   getUserHealMarkerScoreHistory,
   getCompareMeasurements,
@@ -251,6 +272,7 @@ const UserService = {
   addUserToOrganization,
   removeUserFromOrganization,
   checkOrganizationEmailExist,
-  addNewUserToOrganization
+  addNewUserToOrganization,
+  getUserScoreSubHistory
 };
 export default UserService;
