@@ -1832,6 +1832,26 @@ color: #222B45;
   width: auto;
   overflow: visible;
 }
+.enduranceProgress .nourish_progress{
+  justify-content: flex-end;
+}
+.enduranceProgress .nourish_progress p{
+  margin-right: 5px;
+}
+.circularProgressBoxWidth .MuiBox-root{
+  display: flex;
+  flex-direction: column;
+}
+.circularProgressBoxWidth .MuiBox-root p:first-child{
+  order: 2;
+}
+.circularProgressBoxWidth .MuiBox-root p span{font-size: 22px;}
+.circularProgressBoxWidth  .CircularProgressbar-trail{stroke-width: 1;}
+.circularProgressBoxWidth .MuiBox-root p:last-child{
+  order: 1;
+  color:rgb(197, 206, 224);
+  line-height: 1;
+}
 .enduranceTopData{
   display: flex;
   justify-content: center;
