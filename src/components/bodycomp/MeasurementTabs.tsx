@@ -46,18 +46,18 @@ const MeasurementTabs = ({ tabChangeHandler, selectedTab }: Iprops) => {
                 <img style={{ width: '20px', height: '20px' }} src={dimensionIcon} alt={''} />
                 <Box style={{ justifyContent: 'center', display: 'flex', flexDirection: 'column', alignContent: 'center', alignSelf: 'center' }}>
                     <Typography style={{ marginLeft: '6px', fontSize: '12px', fontFamily: FontFamily, fontWeight: selectedTab === 'dimensions' ? '600' : '400' }} >
-                        Dimensions
+                        Styku
                     </Typography>
                 </Box>
             </Box>
 
-            <Box style={{ display: 'flex',  marginRight: '26px', marginLeft: '24px', cursor: 'pointer' }} onClick={() => {
+            <Box style={{ display: 'flex', marginRight: '26px', marginLeft: '24px', cursor: 'pointer' }} onClick={() => {
                 tabChangeHandler('body fat');
             }}>
                 <img style={{ width: '20px', height: '20px' }} src={BodyFatIcon} alt={''} />
                 <Box style={{ justifyContent: 'center', display: 'flex', flexDirection: 'column', alignContent: 'center', alignSelf: 'center' }}>
                     <Typography style={{ marginLeft: '6px', fontSize: '12px', fontFamily: FontFamily, fontWeight: selectedTab !== 'dimensions' ? '600' : '400' }} >
-                        Body Fat
+                        Body Composition
                     </Typography>
                 </Box>
             </Box>

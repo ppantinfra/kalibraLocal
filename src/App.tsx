@@ -33,6 +33,8 @@ const App: React.FC = () => {
   const [snackBarMessage, setSnackBarMessage] = useState<string>('');
   const [isError, setIsError] = useState<boolean>(false);
   const [error, setError] = useState<AxiosError | AxiosResponse>({} as AxiosError);
+  const [is401Error, setIs401Error] = useState<boolean>(false);
+
 
   // define theme
   const theme = createTheme({
@@ -71,26 +73,42 @@ const App: React.FC = () => {
     return config;
   });
 
-  BackendApi.interceptors.response.use(async (response) => {
+  BackendApi.interceptors.response.use(function (response) {
+    // Any status code that lie within the range of 2xx cause this function to trigger
+    // Do something with response data
     numberOfAjaxCAllPending--;
     if (numberOfAjaxCAllPending === 0) {
       hideLoader();
     }
 
     if (!(response && response.status >= 200 && response.status <= 399)) { //if error comes then api response set to null
-      return null;
+      return Promise.reject(response);
     } else { //if no error then api response is the actual response
       return response;
     }
-  }, (err) => {
+  }, function (err) {
+    // Any status codes that falls outside the range of 2xx cause this function to trigger
+    // Do something with response error
     numberOfAjaxCAllPending--;
     // console.log(error?.request?.responseURL);
     if (numberOfAjaxCAllPending === 0) {
       hideLoader();
     }
 
-    setError(err);
-    setIsError(true);
+    if (err?.response?.status === 401) {
+      setIs401Error(true);
+      setError(err);
+      setIsError(true);
+      localStorage.clear();
+      return Promise.reject(err);
+    } else {
+      setIs401Error(false);
+      setError(err);
+      setIsError(true);
+      return Promise.reject(err);
+    }
+
+
   });
 
   const RenderRoute = () => {
@@ -119,6 +137,7 @@ const App: React.FC = () => {
         openDialog={isError}
         setOpenDialog={setIsError}
         error={error}
+        is401Error= {is401Error}
       />
 
       <ThemeProvider theme={theme}>

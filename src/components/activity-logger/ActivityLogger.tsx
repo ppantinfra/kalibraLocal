@@ -43,9 +43,9 @@ const ActivityLogger = ({ clientId }: Props) => {
                     {
                         userActivityLogSetId: '0',
                         set: '',
-                        exerciseLoad: 0,
-                        rep: 0,
-                        rpe: 0,
+                        exerciseLoad: '',
+                        rep: '',
+                        rpe: null,
                         restId: null,
                         tempoId: null,
                         isDataChange: false,
@@ -104,6 +104,38 @@ const ActivityLogger = ({ clientId }: Props) => {
                 };
                 defaultValues.push(obj);
             }
+            // in case of edit if there is less then 6 excercise then we are adding default excercise so that count is 6
+            if (defaultValues.length < 6) {
+                for (let i = defaultValues.length; i < 6; i++) {
+                    const defaultObj = {
+                        focusId: '', // excerciseDropdown[i]?.id,
+                        exerciseId: '', // excerciseDropdown[i].exercises[0].id,
+                        focusDropdownValues: excercisesDropdowns,
+                        excerciseDropdownValues: [], //excerciseDropdown[i].exercises
+                        userId: clientId,
+                        isDataChange: false,
+                        userActivityLogId: '0',
+                        uploadedDate: date,
+                        userActivityLogSets: [
+                            {
+                                userActivityLogSetId: '0',
+                                set: '',
+                                exerciseLoad: '',
+                                rep: '',
+                                rpe: null,
+                                restId: null,
+                                tempoId: null,
+                                isDataChange: false,
+                            },
+                        ],
+                    };
+                    defaultValues.push(defaultObj);
+                }
+            }
+
+
+
+
             const finalObj: any = { userActivityLogs: defaultValues };
             setAllWorkoutData(finalObj);
         } else {
@@ -237,7 +269,7 @@ const ActivityLogger = ({ clientId }: Props) => {
                     <Box className='datePickerBox'>
 
                         <ActivityDatePicker changeHandler={(date, prevDate?) => onDatesChange(date, prevDate)}
-                            filledlogDates={loggerDatesArray} />
+                            filledlogDates={loggerDatesArray} showNoLogsMessage={showNoLogsMessage} />
                     </Box>
 
 

@@ -74,7 +74,8 @@ const BloodworkScreen = () => {
 
     navigate(`/${route.RESULTSUMMARYBLOODWORK}`, {
       state: {
-        assessment: data,
+        assessment: data.assessment,
+        bloodworkId: data.bloodworkId
       }
     });
 

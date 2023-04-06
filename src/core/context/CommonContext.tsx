@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { setAnalyticUserId } from '../../api/Analytics';
-import { setDemoModeLocal, setSelectedUserIdLocal, setTenantKeyLocal, setTenantListLocal } from '../../api/shared/CommonApi';
+import { setDemoModeLocal, setSelectedUserIdLocal, setShowManageOrgLocal, setTenantKeyLocal, setTenantListLocal } from '../../api/shared/CommonApi';
 import { removeWebPushExternalUserId } from '../../api/WebPushAPI';
 
 
@@ -24,6 +24,8 @@ export type CommonContextType = {
     setLoggedInUserData: (value: any) => void;
     continueAnyWay: boolean;
     setContinueAnyWay: (value: boolean) => void;
+    showManageOrg: boolean;
+    setShowManageOrg: (value: boolean) => void;
 
 };
 
@@ -39,6 +41,7 @@ const CommonContextProvider = ({ children }: ContextProviderProps) => {
     const [tenantList, setTenantListState] = React.useState<any>('');
     const [loggedInUserData, setLoggedInData] = React.useState<string>('');
     const [continueAnyWay, setContinueAnyWayState] = React.useState<any>('');
+    const [showManageOrg, setIsShowManageOrg] = React.useState<boolean>(false);
 
 
     const setUserId = (value: string) => {
@@ -56,6 +59,14 @@ const CommonContextProvider = ({ children }: ContextProviderProps) => {
         }
 
 
+    };
+
+
+    const setShowManageOrg = (value: boolean) => {
+        if (value !== null) {
+            setIsShowManageOrg(value);
+            setShowManageOrgLocal(value);//storing it on local storage here
+        }
     };
 
     const setTenantKey = (value: string) => {
@@ -106,7 +117,7 @@ const CommonContextProvider = ({ children }: ContextProviderProps) => {
     };
 
     return (
-        <CommonContext.Provider value={{ userId, setUserId, demoMode, setDemoMode, tenantKey, setTenantKey, tenantList, setTenantList, loggedInUserName, setLoggedInUserName, clearContextAndLogout, loggedInUserData, setLoggedInUserData, continueAnyWay, setContinueAnyWay }}>
+        <CommonContext.Provider value={{ userId, setUserId, demoMode, setDemoMode, tenantKey, setTenantKey, tenantList, setTenantList, loggedInUserName, setLoggedInUserName, clearContextAndLogout, loggedInUserData, setLoggedInUserData, continueAnyWay, setContinueAnyWay, showManageOrg, setShowManageOrg }}>
             {children}
         </CommonContext.Provider>
     );

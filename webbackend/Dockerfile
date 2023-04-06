@@ -16,9 +16,9 @@ WORKDIR /opt/pro-be
 
 COPY . .
 
-RUN npm i --legacy-peer-deps
-RUN npm i --save-dev @types/cors
-RUN npm run build
+RUN yarn install --frozen-lockfile
+RUN yarn add --dev @types/cors
+RUN yarn run build
 
 #CMD npm start
-CMD npm run serve
+CMD yarn run serve

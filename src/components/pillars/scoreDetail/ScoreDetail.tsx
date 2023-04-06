@@ -21,8 +21,6 @@ type ScoreDetailProps = {
   data?: any;
 };
 
-
-
 const ScoreDetail = ({ userId, externalKey, data }: ScoreDetailProps) => {
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.down(700));
@@ -35,14 +33,18 @@ const ScoreDetail = ({ userId, externalKey, data }: ScoreDetailProps) => {
 
   const maxDataPointsToDisplay = 365;
   const getScoreChanges = React.useCallback(async () => {
+    if (externalKey === undefined) {
+      return;
+    }
     const startMonthDateMnt: moment.Moment = moment(endDate).startOf('day').subtract(maxDataPointsToDisplay, 'days');
     setStartDate(startMonthDateMnt.toDate());
     const params = {
       startDate: startMonthDateMnt.toISOString(),
-      endDate: endDate.toISOString(),
+      endDate: endDate && endDate.toISOString(),
       keys: externalKey,
       assessments: true
     };
+
     const response = await UserService.getUserHealMarkerScoreHistory(userId, externalKey, params);
 
     if (response.status >= 200 && response.status <= 399) {
@@ -59,6 +61,8 @@ const ScoreDetail = ({ userId, externalKey, data }: ScoreDetailProps) => {
   }, [userId, endDate, externalKey]);
 
   React.useEffect(() => {
+    setScoreChanges(undefined);
+    setAssessmentList(undefined);
     getScoreChanges();
   }, [getScoreChanges]);
 
@@ -79,6 +83,10 @@ const ScoreDetail = ({ userId, externalKey, data }: ScoreDetailProps) => {
         </TooltipHelper>
       </>
     )
+  }
+
+  if (!data) {
+    return <></>;
   }
 
   return (

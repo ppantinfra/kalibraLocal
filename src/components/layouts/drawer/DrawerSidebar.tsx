@@ -45,8 +45,8 @@ import biomeGreenIcon from '../../../assets/images/navigations/biome-green.svg';
 import nutritionPlanIcon from '../../../assets/images/navigations/nutrition-plan.svg';
 import nutritionPlanGreenIcon from '../../../assets/images/navigations/nutrition-plan-green.svg';
 import Tooltip from '@mui/material/Tooltip';
-
 import CloseIcon from '@mui/icons-material/Close';
+
 
 const drawerWidth = 260;
 
@@ -351,6 +351,8 @@ const DrawerSidebar = ({ open, toggleDrawerHandler, goToPage }) => {
     );
   }
 
+  const gitCommit = localStorage.getItem('gitCommit');
+
   return (
     <Drawer
       transitionDuration={{ appear: 500, enter: 500, exit: 500 }}
@@ -458,7 +460,9 @@ const DrawerSidebar = ({ open, toggleDrawerHandler, goToPage }) => {
               </ListItemButton>
             </List>
             {/* <Divider /> */}
+
           </React.Fragment>
+
         ))}
       </Box>
       {/* Bottom Menu */}
@@ -493,6 +497,9 @@ const DrawerSidebar = ({ open, toggleDrawerHandler, goToPage }) => {
           </React.Fragment>
         ))}
       </div> */}
+      {open === true &&
+        <Typography className={classes.version} >Version: {gitCommit}</Typography>
+      }
     </Drawer>
   );
 };

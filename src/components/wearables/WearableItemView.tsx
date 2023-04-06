@@ -10,6 +10,7 @@ import { moveActivityKeyMap, restActivityKeyMap, showValueAndUnit } from './Acti
 import moment from 'moment';
 import { Tooltip } from '@mui/material';
 import DateFormatterHelper from '../../core/helper/DateFormatterHelper';
+import BarChart from '../charts/bar/BartChart';
 
 type Props = {
   data: any,
@@ -45,6 +46,12 @@ const WearableItemView = ({
   const restActvityKeys = ['sleepAsleepDurationAsleepState', 'sleepAsleepDurationDeepSleepState', 'sleepAsleepDurationRemSleepState', 'sleepAsleepDurationLightSleepState', 'heartRateAvgHrBpm'];
   const actvityKeys = category === 'Move' ? moveActvityKeys : restActvityKeys;
   const keyMap = category === 'Move' ? moveActivityKeyMap : restActivityKeyMap;
+
+  // if (data.heartRateHrSamples.length > 0) {
+  //   console.log('data.heartRateHrSamples==', data.heartRateHrSamples);
+  //   console.log(JSON.parse(data.heartRateHrSamples));
+  // }
+
 
   return (
     <Box
@@ -116,15 +123,14 @@ const WearableItemView = ({
         }
         <Box>
           {category === 'Move' ?
-            <></>
-            // data.activityTypeName === 'Swimming In Pool' ? <ActivityLineChart /> : <BarChart />
+            <BarChart chartData={JSON.parse(data.heartRateHrSamples)} />
             :
             <SpecialCircularProgressBar
-              // strokeWidth={10}
-              // backgroundPadding={18}
               progressValue={calculateReadiness()}
-            // pathColor='#00D68F'
-            // progressText='Readiness'
+              width={304}
+              strkWidth={32}
+              borderColor='#5F93F9'
+              scoreText='Durarion'
             />
           }
         </Box>

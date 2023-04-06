@@ -40,7 +40,7 @@ const SearchClient = ({ searchClientHandler }: Iprops) => {
                         controlName={'email'}
                         register={register}
                         errors={errors}
-                        rules={{ required: true, pattern: pattern.EmailPattern }}
+                        rules={{ required: true, pattern: pattern.EmailPattern, maxLength: 255 }}
                     />
                 </Box>
                 <Box className={classes.buttonBox}>

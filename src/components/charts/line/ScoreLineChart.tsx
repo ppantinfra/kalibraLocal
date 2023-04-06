@@ -32,38 +32,29 @@ const ScoreLineChart = ({ chartData }: Props) => {
     unit = 'year';
   }
 
-  const newData: Array<any> = [];
-  // const newLabels: Array<string> = [];
+  const newGraphData: Array<any> = [];
   let lastItem;
   for (const item of chartData.data) {
     // check the same week
-    if (newData.length > 0) {
+    if (newGraphData.length > 0) {
       if (moment(item.x).isSame(moment(lastItem.x), unit as any)) { //isoWeek
-        newData[newData.length - 1].y = (newData[newData.length - 1].y + item.y) / 2.0;
+        newGraphData[newGraphData.length - 1].y = (newGraphData[newGraphData.length - 1].y + item.y) / 2.0;
       } else {
-        newData.push(item);
+        newGraphData.push({ x: item.x, y: item.y });
         lastItem = item;
       }
     } else {
-      newData.push(item);
+      newGraphData.push({ x: item.x, y: item.y });
       lastItem = item;
     }
   }
-
-  // for (const item of newData) {
-  //   newLabels.push(moment(item.x).format('DD MM YYYY'));
-  // }
-
-  const newChartData = { ...chartData };
-  newChartData.data = newData;
-  // newChartData.labels = newLabels;
 
   const data = {
     datasets: [
       {
         fill: true,
-        lineTension: 0.5,
-        backgroundColor: newChartData.gradient,
+        lineTension: newGraphData.length > 3 ? 0.5 : 0,
+        backgroundColor: chartData.gradient,
         pointRadius: 5,
         pointBorderColor: ColorHelper.getBarColor('teal', chartData.category),
         pointBorderWidth: 2,
@@ -71,11 +62,10 @@ const ScoreLineChart = ({ chartData }: Props) => {
         pointBackgroundColor: '#fff',
         borderColor: ColorHelper.getBarColor('teal', chartData.category),
         borderWidth: 2,
-        data: newChartData.data,
+        data: newGraphData,
       },
     ],
   };
-
   const convertDateFormat = (str: string) => {
     if ((new Date(str)).getMonth() === 0) {
       return moment(new Date(str)).format('MMM YY');
@@ -102,17 +92,10 @@ const ScoreLineChart = ({ chartData }: Props) => {
         display: false,
         beginAtZero: true,
         ticks: {
-          //maxTicksLimit: 10,
           callback: function (val, index) {
             // Hide the label of every 2nd dataset
             return index % 2 === 0 ? val : '';
           },
-          // max: 100,
-          // min: 0,
-          // color: '#000000',
-          // font: {
-          //   size: 10,
-          // },
         },
         grid: {
           display: false,
@@ -120,9 +103,8 @@ const ScoreLineChart = ({ chartData }: Props) => {
       },
       x: {
         beginAtZero: true,
-        display: newChartData.data.length > 0 ? true : false,
+        display: newGraphData.length > 0 ? true : false,
         type: 'time',
-        bounds: 'ticks',
         time: {
           unit: unit,
         },
@@ -131,7 +113,6 @@ const ScoreLineChart = ({ chartData }: Props) => {
         },
         ticks: {
           color: '#929CB0',
-          min: 0,
           font: {
             size: 10,
             weight: 500,
@@ -141,14 +122,8 @@ const ScoreLineChart = ({ chartData }: Props) => {
             if (unit === 'week') {
               return index % 4 === 0 ? convertDateFormat(val) : '';
             } else {
-              return val;
+              return convertDateFormat(val);
             }
-
-            // else if (unit === 'month') {
-            //   return convertDateFormat(val);
-            // } else if (unit === 'year') {
-            //   return moment(new Date(val)).format('YYYY');
-            // }
           },
         },
       },
@@ -201,7 +176,7 @@ const ScoreLineChart = ({ chartData }: Props) => {
 
       </Box>
       <Box className={classes.lineChartBox}>
-        {newData.length === 1 ? <Bar data={data} options={options} /> : <Line data={data} options={options} />}
+        {newGraphData.length === 1 ? <Bar data={data} options={options} /> : <Line data={data} options={options} />}
 
       </Box>
     </React.Fragment>

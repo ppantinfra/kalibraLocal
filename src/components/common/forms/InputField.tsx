@@ -29,6 +29,7 @@ export interface IInputProps {
   arrayControlName?: any;
   arrayName?: any;
   multiline?: boolean;
+  maxLength?: number;
   //NestedFormArray
   nestedIndex?: any;
   nestedControlName?: any;
@@ -144,14 +145,26 @@ const InputField = (props: IInputProps) => {
           InputProps={{
             classes: props?.classes,
             // value:props.defaultValue
-            autoComplete: 'off',
+            // autoComplete: 'off',
             endAdornment: props.inputIndormentElement && (
               <InputAdornment position="end">{props.inputIndormentElement}</InputAdornment>
             )
           }}
+          onInput={(e) => {
+            if (props.maxLength !== undefined && props.maxLength > 0) {
+              (e.target as any).maxLength = props.maxLength;
+            }
+
+          }}
           {...props.register(props.controlName, { ...props.rules })}
           defaultValue={props.defaultValue}
-          onBlur={onBlur}
+          onBlur={(event: any) => {
+            if (props.blurHandler) {
+              props.blurHandler(event);
+            }
+            onBlur();
+
+          }}
           onFocus={onFocus}
           disabled={props.disabled}
           multiline={props.multiline}

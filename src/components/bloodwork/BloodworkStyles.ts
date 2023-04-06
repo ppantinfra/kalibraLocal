@@ -1135,13 +1135,13 @@ export const useBloodworkStyles = makeStyles(
       display: 'flex',
       padding: '16px',
       alignItems: 'center',
-      justifyContent: 'space-between'
+      justifyContent: 'center'
     },
     bdreport_title: {
       // textAlign: "center",
       fontFamily: FontFamily,
-      fontSize: '14px',
-      fontWeight: 'bold'
+      fontSize: '16px',
+      fontWeight: '600'
     },
 
     /***  bloodwork-result-summary  ***/

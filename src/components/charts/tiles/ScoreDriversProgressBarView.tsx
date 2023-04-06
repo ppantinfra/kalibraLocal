@@ -411,22 +411,17 @@ const ScoreDriversProgressBarView = ({ data, category }: Props) => {
   const classes = useScoreDriversProgressBarViewStyles();
   const [selectedSubCat, setSelectedSubCat] = React.useState('');
   const [showPillarInfo, setShownPillarInfo] = React.useState(false);
-  const Progress = ({ done, isLoaded }: any) => {
+  const Progress = ({ done, isLoaded, doneNumber }: any) => {
 
-    const calculateWidth = (donePerc: number) => {
-      const totalLength = donePerc.toString().length;
-      const divider = Number(String(1).padEnd(totalLength + 1, '0'));
-      return Math.round(donePerc / divider * 100) + '%';
-    };
     const [style, setStyle] = React.useState({});
     const progresStyle = {
       opacity: 1,
-      width: done <= 7 ? '7%' : done > 7 && done <= 100 ? `${done}%` : calculateWidth(done),
+      width: done <= 16 ? '16%' : done >= 100 ? '100%' : `${done}%`,
       backgroundColor: done <= 0 ? '#C5CEE0' : ColorHelper.getBarColor('teal', String(category)),
     };
     let loadedStyle = {};
-    if (isLoaded === false) {
 
+    if (isLoaded === false && Object.keys(style).length === 0) {
       setTimeout(() => {
         setStyle(progresStyle);
       }, 200);
@@ -445,7 +440,7 @@ const ScoreDriversProgressBarView = ({ data, category }: Props) => {
         >
           <Typography className={classes.doneText} style={{ color: 'white' }}>
             {' '}
-            {done}
+            {doneNumber !== 0 ? doneNumber : done}
           </Typography>
         </Box>
 
@@ -460,7 +455,7 @@ const ScoreDriversProgressBarView = ({ data, category }: Props) => {
           {' '}
           {item.progressLabel}
         </Typography>
-        <Progress done={Number.parseInt(item.done) < 0 ? 0 : Number.parseInt(item.done)} isLoaded={selectedSubCat.length > 0} />
+        <Progress done={Number.parseInt(item.done) < 0 ? 0 : Number.parseInt(item.done)} isLoaded={selectedSubCat.length > 0} doneNumber={item.doneNumber ? item.doneNumber : 0} />
       </Box>
     ));
   };

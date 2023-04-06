@@ -137,7 +137,7 @@ const Overview = ({ toggleRightDrawer, clientId, allTilesData }: ClientDashboard
       } else {
         healthMarker.name = externalKeys[key];
         data = {
-          lastUpdatedDate: new Date(healthMarker.latestHealthMarkerValues[0].lastUpdated),
+          lastUpdatedDate: healthMarker.latestHealthMarkerValues?.length > 0 ? new Date(healthMarker.latestHealthMarkerValues[0].lastUpdated) : new Date(),
           maxValue: healthMarker.rangeMax,
           minValue: healthMarker.rangeMin,
           category: healthMarker.category

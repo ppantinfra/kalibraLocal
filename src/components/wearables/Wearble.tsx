@@ -134,21 +134,27 @@ const Wearble = ({ clientId, category, selectedActivityType }: IProps) => {
     const todayDate = new Date();
     // const start = new Date().setDate(todayDate.getDate() - 7);
 
-    const start = new Date(new Date().setDate(new Date().getDate() - 7));
+    const start = new Date(new Date().setDate(new Date().getDate() - 30));
     setStartDate(start);
     setEndDate(todayDate);
-    // reset({ startDate: start, endDate: todayDate });
-    // getMoveActivities(start, todayDate);
-    // getRestActivities(start, todayDate);
-    getMoveActivities();
-    getRestActivities();
+    reset({ startDate: start, endDate: todayDate });
 
-  }, [getMoveActivities, getRestActivities, reset]);
+    if (category === 'Move') {
+      getMoveActivities(start, todayDate);
+    } else {
+      getRestActivities(start, todayDate);
+    }
+
+
+    // getMoveActivities();
+    // getRestActivities();
+
+  }, [getMoveActivities, getRestActivities, reset, category]);
 
   const onStartDateChange = (date: any) => {
-    reset({ startDate: date, endDate: date });
+    reset({ startDate: date, endDate: null });
     setStartDate(date);
-    setEndDate(date);
+    setEndDate(null);
   };
 
 

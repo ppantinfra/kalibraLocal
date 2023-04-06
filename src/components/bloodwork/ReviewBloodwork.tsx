@@ -355,7 +355,6 @@ const ReviewBloodwork = ({ onUpdateButtonClickHandler, bloodworkId, clientId, on
     );
     array = array.sort((a: any, b: any) => String(a.healthMarkerName).localeCompare(b.healthMarkerName));
     return array;
-    // [defaultHealthMarker].concat(array);
   };
 
   // Invoke when user click to request another page.
@@ -363,12 +362,6 @@ const ReviewBloodwork = ({ onUpdateButtonClickHandler, bloodworkId, clientId, on
     setSelectedPageIndex(event.selected);
   };
 
-  // const getUnitError = (item: any) => {
-  //   if (item.unit === null || item.unit === undefined || item.unut.trim().length === 0) {
-  //     return 'Unit is missing';
-  //   }
-  //   return '';
-  // };
   const prevousLabel = () => {
     return <Box style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginRight: '24px' }} > <ArrowBackIosIcon style={{ marginRight: '10px', width: '16px', height: '16px' }} /> Page {selectedPageIndex - 1 >= 0 ? pagesData[selectedPageIndex - 1].pageNumber + startPageNumber : pagesData[0].pageNumber + startPageNumber}</Box>;
   };
@@ -400,6 +393,9 @@ const ReviewBloodwork = ({ onUpdateButtonClickHandler, bloodworkId, clientId, on
         break;
       }
     }
+    if (bloodworkData?.healthMarker.length === 0) {
+      canSubmit = false;
+    }
   }
 
   let addMarkerValueRange = '';
@@ -418,7 +414,7 @@ const ReviewBloodwork = ({ onUpdateButtonClickHandler, bloodworkId, clientId, on
             columns={12}
             mt={1}
           >
-            {bloodworkData && bloodworkData.healthMarker.length > 0 &&
+            {bloodworkData && bloodworkData.healthMarker.length >= 0 &&
               <Grid item lg={6} md={6} xs={6}>
                 <Box style={{
                   alignContent: 'flex-start', padding: '24px', backgroundColor: 'white', borderRadius: '10px'
@@ -445,6 +441,8 @@ const ReviewBloodwork = ({ onUpdateButtonClickHandler, bloodworkId, clientId, on
                       control={control}
                       labelName=""
                       disableFutureDate={true}
+                      minValue={new Date('1970-01-01 00:00:01')}
+                      maxValue={new Date('2038-01-19 03:14:07')}
                     />
                     <Typography className={classes.testTimeTitle}>Referral authority (practitioner or clinic)</Typography>
                     <InputField
@@ -456,7 +454,7 @@ const ReviewBloodwork = ({ onUpdateButtonClickHandler, bloodworkId, clientId, on
                       controlName={'referralAuthority'}
                       register={register}
                       errors={errors}
-                      rules={{ required: true }}
+                      rules={{ required: true, maxLength: 255 }}
                       sx={{
                         '& .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input': {
                           padding: '10px',
@@ -516,12 +514,6 @@ const ReviewBloodwork = ({ onUpdateButtonClickHandler, bloodworkId, clientId, on
                                   <Typography className={classes.column_header_text_red}>Delete</Typography>
                                 </Box>
                               </TableCell>
-                              {/* Validation Msg */}
-                              {/* <TableCell align="right" style={{ minWidth: 61 }} className={classes.tableHeadCell}>
-                              <Box className={classes.tableHeadCellBox}>
-                                <Typography className={classes.column_header_text}></Typography>
-                              </Box>
-                            </TableCell> */}
                             </TableRow>
                           </TableHead>
                           <TableBody>
@@ -582,14 +574,6 @@ const ReviewBloodwork = ({ onUpdateButtonClickHandler, bloodworkId, clientId, on
                                         onChange={(event) => handleDropdown(event, index)}
                                         className={classes.selectField}
                                         size="small"
-                                        sx={{
-                                          // '& .MuiOutlinedInput-root': {
-                                          //   border: 'solid 1px red'
-                                          // },
-                                          // '.MuiSelect-select': {
-                                          //   border: 'solid 0px red !important'
-                                          // }
-                                        }}
                                       >
                                         {item.unit_types?.map((menu) => {
                                           return (
@@ -608,14 +592,7 @@ const ReviewBloodwork = ({ onUpdateButtonClickHandler, bloodworkId, clientId, on
                                         />
                                       </Button>
                                     </TableCell>
-                                    {/* Validation Mag */}
-                                    {/* <TableCell align="center">
-                                    <Typography className={classes.validationMsg}>{getValueError(item)}</Typography>
-                                  </TableCell> */}
-
-
                                   </TableRow>
-
                                 </React.Fragment>
                               );
                             })}
@@ -623,10 +600,8 @@ const ReviewBloodwork = ({ onUpdateButtonClickHandler, bloodworkId, clientId, on
                         </Table>
                       </TableContainer>
                     }
-
-
+                    {/* Add Marker */}
                     <Typography className={classes.add_marker_text} style={{ marginTop: bloodworkData && bloodworkData.healthMarker.length > 0 ? '24px' : '0px' }}>Add Marker</Typography>
-
                     <TableContainer component={Paper} className={classes.mui_tableContainer}>
                       <Table sx={{ minWidth: 350 }} aria-label="client table" className={classes.mui_add_table}>
                         <TableHead>
@@ -660,12 +635,6 @@ const ReviewBloodwork = ({ onUpdateButtonClickHandler, bloodworkId, clientId, on
                                 {/* <Typography className={classes.column_header_text_red}>Delete</Typography> */}
                               </Box>
                             </TableCell>
-                            {/* Validation Msg */}
-                            {/* <TableCell align="right" style={{ minWidth: 61 }} className={classes.tableHeadCell}>
-                              <Box className={classes.tableHeadCellBox}>
-                                <Typography className={classes.column_header_text}></Typography>
-                              </Box>
-                            </TableCell> */}
                           </TableRow>
                         </TableHead>
                         <TableBody>
@@ -770,18 +739,14 @@ const ReviewBloodwork = ({ onUpdateButtonClickHandler, bloodworkId, clientId, on
                                 />
                               </Button>
                             </TableCell>
-
                           </TableRow>
                         </TableBody>
                       </Table>
                     </TableContainer>
 
                     {pagesData.length > 0 &&
-
                       <ReactPaginate
-                        //pageClassName={classes.pageItem}
                         className={'pagination'}
-                        //breakLabel="..."
                         nextLabel={nextLabel()}
                         onPageChange={handlePageClick}
                         pageRangeDisplayed={5}
@@ -809,7 +774,6 @@ const ReviewBloodwork = ({ onUpdateButtonClickHandler, bloodworkId, clientId, on
               </Box>
             </Grid>
           </Grid>
-          {/* </Box> */}
         </Box>
       )
       }

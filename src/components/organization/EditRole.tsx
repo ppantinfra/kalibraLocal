@@ -18,19 +18,20 @@ const EditRole = ({ selectedRoles, toggleDrawer, updateUserId, refreshListHandle
 
 
   useEffect(() => {
+    const rolesObjectData = {
+      isOwner: false,
+      isAdmin: false,
+      isBillingManager: false,
+      isUser: false
+    };
+
     if (selectedRoles && selectedRoles.length > 0) {
       setDisableButton(false);
-      const rolesObjectData = {
-        isOwner: false,
-        isAdmin: false,
-        isBillingManager: false,
-        isUser: false
-      };
       for (const role of selectedRoles) {
         rolesObjectData[role.key] = true;
       }
-      setRolesObj(rolesObjectData);
     }
+    setRolesObj(rolesObjectData);
   }, [selectedRoles]);
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {

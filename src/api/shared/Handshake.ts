@@ -33,6 +33,7 @@ export const handshake = async (variant: HandshakeVariant, userToken?: string) =
     })
     .then(response => {
         
+      localStorage.setItem('gitCommit', response.data.gitCommit);
         const newEnv = response.data.envVars.reduce((prev: any, curr: any) => {
             prev[curr.name.replace('PRO_', '').replace('REACT_APP_', '')] = curr.value ? curr.value : Config[curr.name.replace('PRO_', '').replace('REACT_APP_', '') as keyof ConfigType];            
             return prev;

@@ -25,14 +25,18 @@ type IProps = {
 
 
 
-const SmallSquareTilesItem = ({  handleDrawerOpen, data }: IProps) => {
+const SmallSquareTilesItem = ({ handleDrawerOpen, data }: IProps) => {
   const classes = useSmallSquareTilesItemStyles();
   const { demoMode } = useContext(CommonContext) as CommonContextType;
   const [openMediaModal, setOpenMediaModal] = React.useState(false);
 
   const integerValuesPillar = ['Carbs', 'Protein', 'Fat', 'BMR', 'TDEE'];
 
-  if (data.value === undefined || data.categories === null || data.categories?.length === 0) {
+  if (data.value === undefined
+    || data.categories === null
+    || data.categories?.length === 0
+    || data?.latestHealthMarkerValues == null
+    || data?.latestHealthMarkerValues?.length === 0) {
     return (
       <React.Fragment>
         <Box className={`${classes.bclmbtgtsg_tileItem} ${classes.noCursor} `}>
@@ -122,26 +126,26 @@ const SmallSquareTilesItem = ({  handleDrawerOpen, data }: IProps) => {
     <React.Fragment>
       <Box
         className={classes.bclmbtgtsg_tileItem}
+        onClick={handleDrawerOpen}
         sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
           '&:hover': {
             boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px'
           }
         }}
       >
         <Box className={classes.bclmbtgtsgtI_headerBox}>
-          <Box className={classes.bclmbtgtsgti_pillar}  onClick={handleDrawerOpen}>
+          <Box className={classes.bclmbtgtsgti_pillar} >
             <PillarIcon pillarName={data.category} isCircle={true} />
           </Box>
-          <Box className={classes.bclmbtgtsgti_heading}  onClick={handleDrawerOpen}>
-
+          <Box className={classes.bclmbtgtsgti_heading} >
             <Typography style={{ height: 15 }} >
               {data?.name}
             </Typography>
-
           </Box>
-
           <Box className={classes.bclmbtgtsgti_shareBox}>
-
             {demoMode === true && (
               <> </>
               // <Link className={classes.shareIcon} onClick={tileHandleShare}>
@@ -156,21 +160,18 @@ const SmallSquareTilesItem = ({  handleDrawerOpen, data }: IProps) => {
             />
             }
           </Box>
-
         </Box>
-        <Box mt={1} className={classes.bclmbtgtsgtI_lineChartBox}  onClick={handleDrawerOpen}>
+        <Box mt={1} className={classes.bclmbtgtsgtI_lineChartBox}>
           <SmallCurverdLineChart
             lineChartTitle={data?.name}
             lineChartColor={FontColor}
             lineChartData={pointChartData}
           />
         </Box>
-        <Box className={classes.bclmbtgtsgtI_percentageScoreBox}  onClick={handleDrawerOpen}>
+        <Box className={classes.bclmbtgtsgtI_percentageScoreBox} >
           <Box mt={1}>
             <Typography className={`${classes.finalScore}`}>
-
               {integerValuesPillar.includes(data?.name) ? Math.round(data?.value) : `${Number(data?.value).toFixed(1)}`}
-
               <span>&nbsp;{data?.unit}</span>
             </Typography>
           </Box>
@@ -183,7 +184,6 @@ const SmallSquareTilesItem = ({  handleDrawerOpen, data }: IProps) => {
                 title={midPoint ? `${`Variance ${NumberConversion(data?.value - midPoint)}`}` : ''}
                 placement="top"
               >
-
                 <Typography className={classes.fromScore}>
                   {midPoint ?
                     (<>
@@ -191,16 +191,13 @@ const SmallSquareTilesItem = ({  handleDrawerOpen, data }: IProps) => {
                       <span>&nbsp;{data?.unit}</span>
                     </>)
                     : '-'}
-
                 </Typography>
               </TooltipHelper>
-
-
             </Box>
           )}
         </Box>
 
-        <Box onClick={handleDrawerOpen} style={{ marginBottom: 0 }}>
+        <Box style={{ marginBottom: 0 }}>
           <GradientHorizontalProgressBarChart progressBarData={[progressBarData]} />
         </Box>
       </Box>

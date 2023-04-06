@@ -13,7 +13,7 @@ variables:
   DEBUG_MODE: "true"
 services:
   - name: docker:20.10.16-dind
-    command: ["--tls=false"]
+    command: ["--tls=false", "--insecure-registry=10.11.15.1:5000", "--registry-mirror", "http://10.11.15.1:5000"]
 
 stages:          # List of stages for jobs, and their order of execution
   - precheck
@@ -27,9 +27,9 @@ pre-check:
   image: node:16.13.1
   stage: precheck
   script:
-    - npm i
-    - npm run lint
-    - npm run build
+    - yarn install --frozen-lockfile
+    - yarn run lint
+    - yarn run build
 #    - eslint . || true
 #    - npm run prettier
 .build-and-push-docker-image-be:  # disabled
@@ -86,7 +86,7 @@ deploy-stage:
     - docker tag $IMAGE_TAG_FE frontend-pro:as-run
     - docker rm -f frontend-pro-stage || true
 #    - docker run -d --rm --name frontend-pro-stage -p 127.0.0.1:5050:5000 --log-driver=gelf --log-opt gelf-address=tcp://127.0.0.1:12201 -e PUBLIC_URL -e AWS_REGION -e COGNITO_USER_POOL_ID -e COGNITO_IDENTITY_POOL_ID -e COGNITO_USER_POOL_WEB_CLIENT_ID -e USER_FILES_S3_BUCKET -e BACKEND_API_ENDPOINT -e ONESIGNAL_APP_ID -e SLACK_WEB_HOOK_URL -e AMPLITUDE_API_KEY -e CHAT_FEATURE -e PDF_UPLOAD_FEATURE -e DEBUG_MODE $IMAGE_TAG_FE
-    - docker run -d --rm --name frontend-pro-stage -p 127.0.0.1:5050:5000 --log-driver=gelf --log-opt gelf-address=tcp://127.0.0.1:12201 -e WDS_SOCKET_PORT=443 -e PUBLIC_URL -e REACT_APP_SSR=true -e PORT=5000 -e REACT_APP_AWS_REGION=$REACT_APP_AWS_REGION -e REACT_APP_COGNITO_USER_POOL_ID=$REACT_APP_COGNITO_USER_POOL_ID -e REACT_APP_COGNITO_IDENTITY_POOL_ID=$REACT_APP_COGNITO_IDENTITY_POOL_ID -e REACT_APP_COGNITO_USER_POOL_WEB_CLIENT_ID=$REACT_APP_COGNITO_USER_POOL_WEB_CLIENT_ID -e REACT_APP_TERRA_DEV_ID -e REACT_APP_TERRA_API_KEY -e REACT_APP_HANDSHAKE_API_KEY -e REACT_APP_USER_FILES_S3_BUCKET=$REACT_APP_USER_FILES_S3_BUCKET -e REACT_APP_BACKEND_API_ENDPOINT=$REACT_APP_BACKEND_PRO_API_ENDPOINT -e REACT_APP_ONESIGNAL_APP_ID=$REACT_APP_ONESIGNAL_APP_ID -e REACT_APP_SLACK_WEB_HOOK_URL=$REACT_APP_SLACK_WEB_HOOK_URL -e REACT_APP_AMPLITUDE_API_KEY=$REACT_APP_AMPLITUDE_API_KEY -e REACT_APP_DEBUG_MODE=$REACT_APP_DEBUG_MODE $IMAGE_TAG_FE sh -c "npm run build && npm run deploy"
+    - docker run -d --rm --name frontend-pro-stage -p 127.0.0.1:5050:5000 --log-driver=gelf --log-opt gelf-address=tcp://127.0.0.1:12201 -e WDS_SOCKET_PORT=443 -e PUBLIC_URL -e REACT_APP_SSR=true -e PORT=5000 -e REACT_APP_AWS_REGION=$REACT_APP_AWS_REGION -e REACT_APP_COGNITO_USER_POOL_ID=$REACT_APP_COGNITO_USER_POOL_ID -e REACT_APP_COGNITO_IDENTITY_POOL_ID=$REACT_APP_COGNITO_IDENTITY_POOL_ID -e REACT_APP_COGNITO_USER_POOL_WEB_CLIENT_ID=$REACT_APP_COGNITO_USER_POOL_WEB_CLIENT_ID -e REACT_APP_TERRA_DEV_ID -e REACT_APP_TERRA_API_KEY -e REACT_APP_HANDSHAKE_API_KEY -e REACT_APP_USER_FILES_S3_BUCKET=$REACT_APP_USER_FILES_S3_BUCKET -e REACT_APP_BACKEND_API_ENDPOINT=$REACT_APP_BACKEND_PRO_API_ENDPOINT -e REACT_APP_ONESIGNAL_APP_ID=$REACT_APP_ONESIGNAL_APP_ID -e REACT_APP_SLACK_WEB_HOOK_URL=$REACT_APP_SLACK_WEB_HOOK_URL -e REACT_APP_AMPLITUDE_API_KEY=$REACT_APP_AMPLITUDE_API_KEY -e REACT_APP_DEBUG_MODE=$REACT_APP_DEBUG_MODE $IMAGE_TAG_FE sh -c "yarn run build && yarn run deploy"
     - sleep 20
     - docker logs frontend-pro-stage
 

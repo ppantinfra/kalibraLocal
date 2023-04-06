@@ -54,14 +54,20 @@ type Props = {
   bloodworkMeasuredDate?: Date;
   bloodworkCancelReiviewHandler?: any;
   bloodworkDeleteUploadHandler?: any;
+  btnBackHandler?: any;
   componentRender?: any; // used to show extra details on this component then we have to pass jsx in that directly
 };
 
-const Back = ({ componentTitle, disableBackButton, bloodworkCreatedOn, bloodworkCancelReiviewHandler, bloodworkDeleteUploadHandler, bloodworkMeasuredDate, componentRender }: Props) => {
+const Back = ({ componentTitle, disableBackButton, bloodworkCreatedOn, bloodworkCancelReiviewHandler, bloodworkDeleteUploadHandler, bloodworkMeasuredDate, componentRender, btnBackHandler }: Props) => {
   const classes = useBackScreenStyles();
   const navigate = useNavigate();
   const navigateToBack = () => {
-    navigate(-1);
+    if (btnBackHandler) {
+      btnBackHandler();
+    } else {
+      navigate(-1);
+    }
+
   };
   return (
     <Box

@@ -30,6 +30,7 @@ type IProps = {
   bloodworkReportTitle?: any;
   bloodworkReportGroup?: any;
   bloodworkMeasuredDate: Date;
+  bloodworkId?: any;
 };
 
 const SideDrawer = ({
@@ -41,7 +42,8 @@ const SideDrawer = ({
   // title,
   bloodworkReportTitle,
   bloodworkReportGroup,
-  bloodworkMeasuredDate
+  bloodworkMeasuredDate,
+  bloodworkId
 }: IProps) => {
   const classes = DrawerActionSideBarStyle();
   const { demoMode } = useContext(CommonContext) as CommonContextType;
@@ -97,7 +99,8 @@ const SideDrawer = ({
                     state: {
                       bloodworkReportTitle: bloodworkReportTitle,
                       bloodworkReportGroup: bloodworkReportGroup,
-                      bloodworkMeasuredDate: bloodworkMeasuredDate
+                      bloodworkMeasuredDate: bloodworkMeasuredDate,
+                      bloodworkId: bloodworkId
                     }
                   });
                 }}

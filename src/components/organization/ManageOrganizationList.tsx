@@ -148,6 +148,7 @@ const ManageOrganizationList = ({ userList, sortHandler, toggleRightDrawer }) =>
 
   React.useEffect(() => {
     setPage(0);
+    setSortClickedArray([]);
   }, [userList]);
 
   return (
@@ -339,8 +340,8 @@ const ManageOrganizationList = ({ userList, sortHandler, toggleRightDrawer }) =>
                       </TableCell>
                       {/* Edit */}
                       <TableCell className='editCol'>
-                        <Button disabled={checkEditModifyPermission(user)}>
-                          <Box onClick={() => onEditClick(user?.roles, user?.proUserId, user?.proUserName)}>
+                        <Button disabled={checkEditModifyPermission(user)} onClick={() => onEditClick(user?.roles, user?.proUserId, user?.proUserName)}>
+                          <Box>
                             <span className={classes.client}>
                               <svg
                                 width="16"
@@ -363,10 +364,9 @@ const ManageOrganizationList = ({ userList, sortHandler, toggleRightDrawer }) =>
                       </TableCell>
                       {/* Delete */}
                       <TableCell className='editCol'>
-                        <Button disabled={checkEditModifyPermission(user)}>
+                        <Button disabled={checkEditModifyPermission(user)}  onClick={() => goToDeletePractioner(user?.proUserId, user?.proUserName)}>
                           <span
                             className={classes.client}
-                            onClick={() => goToDeletePractioner(user?.proUserId, user?.proUserName)}
                           >
                             <svg
                               width="20"

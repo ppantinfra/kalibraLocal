@@ -9,7 +9,8 @@ import ClientOverviewScreen from '../../pages/clients/ClientOverviewScreen';
 import ActivityLoggerScreen from '../../pages/interactionSystems/activityLogger/ActivityLoggerScreen';
 import { BodyComposition, Genomics, Nuitritions, BiomeScreen, Wearables } from '../../components/pillars';
 import { RoutesPath as route } from '../constants';
-import IntelligenceClientOverviewScreen from '../../pages/analytics/Intelligence/IntelligenceClientOverviewScreen';
+// import IntelligenceClientOverviewScreen from '../../pages/analytics/Intelligence/IntelligenceClientOverviewScreen';
+import IntelligenceScreen from '../../pages/analytics/Intelligence/IntelligenceScreen';
 import ConsultationsScreen from '../../pages/products/ConsultationsScreen';
 import SupplementsScreen from '../../pages/products/SupplementsScreen';
 import LabTestsScreen from '../../pages/products/LabTestsScreen';
@@ -23,8 +24,8 @@ import NewPasswordScreen from '../../pages/auth/NewPasswordScreen';
 import ManageClientsScreen from '../../pages/clients/ManageClientsScreen';
 import ClientAssessmentsScreen from '../../pages/clients/ClientAssessmentsScreen';
 import AddClientScreen from '../../pages/clients/AddClientScreen';
-import IntelligenceClientList from '../../components/intelligence/IntelligenceClientList';
-import IntelligenceClientDetails from '../../components/intelligence/IntelligenceClientDetails';
+// import IntelligenceClientList from '../../components/intelligence/IntelligenceClientList';
+// import IntelligenceClientDetails from '../../components/intelligence/IntelligenceClientDetails';
 import AssessmentLandingScreen from '../../pages/interactionSystems/assessments/AssessmentLandingScreen';
 import AssessmentConductScreen from '../../pages/interactionSystems/assessments/AssessmentConductScreen';
 import AddMeasurementaScreen from '../../pages/interactionSystems/bodyComposition/AddMeasurementScreen';
@@ -38,6 +39,8 @@ import ManageOrganizationScreen from '../../pages/organization/ManageOrganizatio
 import AddPractionerScreen from '../../pages/organization/AddPractionerScreen';
 import DeletePractionerScreen from '../../pages/organization/DeletePractionerScreen';
 import HelpScreen from '../../pages/help/HelpScreen';
+import IntelligenceClientDashboardScreen from '../../pages/analytics/Intelligence/IntelligenceClientDashboardScreen';
+import IntelligenceCustomiseDashboardScreen from '../../pages/analytics/Intelligence/IntelligenceCustomiseDashboardScreen';
 interface Route {
   key: string;
   title: string;
@@ -213,20 +216,29 @@ export const sideBarLayoutRoutes: Array<Route> = [
     key: 'intelligence-dashboard-route',
     title: 'Intelligence Dashboard Screen',
     path: `/${route.INTELLIGENCE}`,
-    component: IntelligenceClientOverviewScreen
-  },
-  {
-    key: 'intelligence-clients-route',
-    title: 'Intelligence clients Screen',
-    path: `/${route.INTELLIGENCECLIENTLISTROUTE}`,
-    component: IntelligenceClientList
+    component: IntelligenceScreen
   },
   {
     key: 'intelligence-clients-Details-route',
     title: 'Intelligence clients Details Screen',
-    path: `/${route.INTELLIGENCECLIENTDETAILSROUTE}`,
-    component: IntelligenceClientDetails
+    path: `/${route.INTELLIGENCECLIENTDETAILSROUTE}/:selectedClientId`,
+    component: IntelligenceClientDashboardScreen
   },
+
+  {
+    key: 'intelligence-Customise-Dashboard -route',
+    title: 'Intelligence Customise Dashboard Screen',
+    path: `/${route.INTELLIGENCECUSTOMISEDASHBOARD}`,
+    component: IntelligenceCustomiseDashboardScreen
+  },
+
+  // {
+  //   key: 'intelligence-clients-route',
+  //   title: 'Intelligence clients Screen',
+  //   path: `/${route.INTELLIGENCECLIENTLISTROUTE}`,
+  //   component: IntelligenceClientList
+  // },
+ 
   {
     key: 'products-route',
     title: 'Products Screen',

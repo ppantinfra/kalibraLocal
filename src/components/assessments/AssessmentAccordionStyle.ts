@@ -17,6 +17,12 @@ export const useAssessmentAccordionStyles = makeStyles(
     backtoLink: {
       paddingBottom: '10px',
     },
+    labelClassName: {
+      color: '#8F9BB3 ',
+      fontSize: '10px',
+      fontFamily: FontFamily,
+      paddingBottom: '8px'
+    },
     chevronLeftIcon: {},
     multiStepAssFormBox: {
       '& .MuiAccordionDetails-root': {
@@ -151,9 +157,10 @@ export const useAssessmentAccordionStyles = makeStyles(
       },
     },
     commentBox: {
-      marginTop: '2vmax',
-      display: 'grid',
+      //marginTop: '2vmax',
+      display: 'flex',
       gap: '2%',
+      flexDirection: 'column-reverse',
       gridTemplateColumns: '48%',
       '& .MuiOutlinedInput-notchedOutline': {
         border: '1px solid #E4E9F2'

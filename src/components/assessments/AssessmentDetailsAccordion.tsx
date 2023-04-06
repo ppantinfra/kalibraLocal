@@ -22,13 +22,15 @@ type IProps = {
   clientId?: string;
   componentOpenOnDialog?: boolean;
   editAssessmentHandler?: any
+  isInactiveClient?: boolean;
 };
 
 const AssessmentDetailsAccordion = ({
   reportId,
   clientId,
   componentOpenOnDialog,
-  editAssessmentHandler
+  editAssessmentHandler,
+  isInactiveClient
 }: IProps) => {
   const classes = useAssessmentDetailsAccordionStyles();
   const [expandedAccordionIndex, setExpandedAccordionIndex] = React.useState<
@@ -250,14 +252,16 @@ const AssessmentDetailsAccordion = ({
                 )))}
             </Box>
           }
-          <Box sx={{ display: 'flex', marginTop: '24px', justifyContent: 'flex-end' }}>
-            <HookFormButton
-              className={classes.editBtn}
-              variant="contained"
-              name={'Edit Assessment'}
-              handleSubmit={() => { editAssessmentHandler(reportId); }}
-            />
-          </Box>
+          {isInactiveClient !== true &&
+            <Box sx={{ display: 'flex', marginTop: '24px', justifyContent: 'flex-end' }}>
+              <HookFormButton
+                className={classes.editBtn}
+                variant="contained"
+                name={'Edit Assessment'}
+                handleSubmit={() => { editAssessmentHandler(reportId); }}
+              />
+            </Box>
+          }
         </>
       )
       }

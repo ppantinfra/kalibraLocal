@@ -178,7 +178,17 @@ export const DrawerLayoutStyles = makeStyles(
     },
     nested: {
       paddingLeft: '4px'
-    }
+    },
+    version: {
+      fontFamily: FontFamily,
+      color: FontColor,
+      fontSize: '10px',
+      fontWeight: 400,
+      marginBottom: '16px',
+      marginLeft: '24px',
+      marginRight: '36px',
+      wordWrap: 'break-word' 
+    },
   },
   { index: 1 }
 );

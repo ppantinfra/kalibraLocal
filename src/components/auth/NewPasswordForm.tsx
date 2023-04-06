@@ -62,7 +62,8 @@ const NewPasswordForm: React.FC<RegistrationProps> = (props) => {
               required: true,
               validate: {
                 checkPassword: (v: any) => props.passwordCheck(v) || props.passwordErrorMsg
-              }
+              },
+              maxLength: 255
             }}
             inputIndormentElement={
               <IconButton
@@ -96,7 +97,8 @@ const NewPasswordForm: React.FC<RegistrationProps> = (props) => {
               required: true,
               validate: {
                 checkPassword: (v: any) => props.passwordCheck(v) || props.passwordErrorMsg
-              }
+              },
+              maxLength: 255
             }}
             inputIndormentElement={
               <IconButton

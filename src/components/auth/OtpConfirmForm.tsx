@@ -45,7 +45,7 @@ const OtpConfirmForm: React.FC<RegistrationProps> = (props) => {
         <CloseIcon fontSize="small" />
       </IconButton>
     </React.Fragment>
-);
+  );
   const {
     register,
     handleSubmit,
@@ -145,7 +145,7 @@ const OtpConfirmForm: React.FC<RegistrationProps> = (props) => {
             controlName={'otp'}
             register={register}
             errors={errors}
-            rules={{ required: true }}
+            rules={{ required: true, maxLength: 255 }}
           />
         </Box>
       </Box>
@@ -194,18 +194,18 @@ const OtpConfirmForm: React.FC<RegistrationProps> = (props) => {
         }
       </Box>
       <Snackbar
-          open={resendSnackbar}
-          autoHideDuration={6000}
-          onClose={() => setResendSnackbar(false)}
-          anchorOrigin={{
+        open={resendSnackbar}
+        autoHideDuration={6000}
+        onClose={() => setResendSnackbar(false)}
+        anchorOrigin={{
           vertical: 'bottom',
           horizontal: 'left',
-      }}>
-          <Alert severity={resendError ? 'error' : 'success'} action={action}>
-              {resendMessage}
-          </Alert>  
+        }}>
+        <Alert severity={resendError ? 'error' : 'success'} action={action}>
+          {resendMessage}
+        </Alert>
       </Snackbar>
-      <ErrorDialog 
+      <ErrorDialog
         openDialog={visibleErrorDialog}
         setOpenDialog={setVisibleErrorDialog}
         error={error}

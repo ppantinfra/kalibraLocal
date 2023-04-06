@@ -6,16 +6,19 @@ import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined';
 import { sendToKalibra } from '../../../api/shared/SendErrorReport';
 import CloseIcon from '@mui/icons-material/Close';
 
+
 type ErrorDialogProps = {
     openDialog: boolean;
     setOpenDialog: any;
     error: AxiosError | AxiosResponse;
+    is401Error?: boolean;
 };
 
-const ErrorDialog = ({ openDialog, setOpenDialog, error }: ErrorDialogProps) => {
+const ErrorDialog = ({ openDialog, setOpenDialog, error, is401Error }: ErrorDialogProps) => {
     const classes = ErrorDialogStyles();
     const [confirmSend, setConfirmSend] = useState<boolean>(false);
     const [errorMsg, setErrorMsg] = useState<string>('');
+
 
     useEffect(() => {
         const apiError: any = error;
@@ -52,17 +55,29 @@ const ErrorDialog = ({ openDialog, setOpenDialog, error }: ErrorDialogProps) => 
         </React.Fragment>
     );
 
+    const onDialogClose = () => {
+        if (is401Error) {
+            localStorage.clear();
+        } else {
+            setOpenDialog(false);
+        }
+    };
+
+
 
     return (
         <>
             <Dialog
                 open={openDialog}
-                onClose={() => setOpenDialog(false)}
+                onClose={() => { onDialogClose(); }}
             >
                 <ErrorOutlineOutlinedIcon sx={{ fontSize: 128, width: '100%' }} className={classes.icon} />
+
+
                 <DialogTitle className={classes.title} sx={{ padding: '8px 0', fontSize: 24 }}>
-                    Looks like we have a little problem.
+                    {is401Error ? 'Looks like you are not authorised to do this action.' : 'Looks like we have a little problem.'}
                 </DialogTitle>
+
                 <DialogContent sx={{ padding: 0 }}>
                     <DialogContentText className={classes.content}>
                         {/* We have experienced an unexpected situation during your request processing.
@@ -84,14 +99,17 @@ const ErrorDialog = ({ openDialog, setOpenDialog, error }: ErrorDialogProps) => 
                     </DialogContentText>
 
                 </DialogContent>
-                <DialogActions className={classes.dismissButton}>
-                    <Button onClick={() => {
-                        setOpenDialog(false);
-                        sendToKalibra(error);
-                        setConfirmSend(true);
-                    }} color='inherit'>Send to Kalibra</Button>
-                    <Button onClick={() => setOpenDialog(false)} autoFocus color='inherit'>Dismiss</Button>
-                </DialogActions>
+
+                {!is401Error &&
+                    <DialogActions className={classes.dismissButton}>
+                        <Button onClick={() => {
+                            setOpenDialog(false);
+                            sendToKalibra(error);
+                            setConfirmSend(true);
+                        }} color='inherit'>Send to Kalibra</Button>
+                        <Button onClick={() => setOpenDialog(false)} autoFocus color='inherit'>Dismiss</Button>
+                    </DialogActions>
+                }
             </Dialog>
             <Snackbar
                 open={confirmSend}

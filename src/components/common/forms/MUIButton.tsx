@@ -73,9 +73,15 @@ const MUIButton = ({
       className={classes.button}
       onClick={onclickHandler}
       sx={{
-        background: buttonBackground === undefined ? undefined : `${buttonBackground} !important`, color: buttonColor, minWidth: width,
+        color: buttonColor,
+        minWidth: width,
         '&:hover': {
           background: buttonBackground === undefined ? undefined : `${darken(String(buttonBackground), 0.1)} !important`
+        },
+        '&.Mui-disabled': {
+          backgroundColor: '#EDF1F7',
+          background: '#EDF1F7',
+          color: '#C5CEE0'
         }
       }}
       disabled={disabled}

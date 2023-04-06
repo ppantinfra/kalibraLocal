@@ -28,10 +28,8 @@ const useStyles = makeStyles({
   }
 });
 
-const SpeciallCircularProgressBar = ({ progressValue }) => {
+const SpeciallCircularProgressBar = ({ progressValue, width, strkWidth, borderColor, scoreText }) => {
   const classes = useStyles();
-  const strkWidth = 32;
-  const width = 304;
   const radius = (width - strkWidth) / 2;
 
   // Arc length at 100% coverage is the circle circumference
@@ -40,13 +38,14 @@ const SpeciallCircularProgressBar = ({ progressValue }) => {
   const dashOffset = dashArray - dashArray * progressValue / 100;
 
   return (
-    <Box sx={{ height: 152, width: 152, margin: 'auto' }} className={classes.circularProgressBox}>
+    <Box sx={{ height: width / 2, width: width / 2, margin: 'auto' }} className={classes.circularProgressBox}>
       <svg
         width={width / 2}
         height={width / 2}
         viewBox={`0 0 ${width} ${width}`}>
         <circle
           className="circle-background"
+
           cx={width / 2}
           cy={width / 2}
           r={radius}
@@ -61,9 +60,10 @@ const SpeciallCircularProgressBar = ({ progressValue }) => {
           transform={`rotate(-90 ${width / 2} ${width / 2})`}
           style={{
             strokeDasharray: dashArray,
-            strokeDashoffset: dashOffset
+            strokeDashoffset: dashOffset,
+            stroke: borderColor
           }} />
-        <text
+        {scoreText.length > 0 && <text
           className="circle-text"
           x="50%"
           y="50%"
@@ -71,11 +71,13 @@ const SpeciallCircularProgressBar = ({ progressValue }) => {
           textAnchor="middle">
           Duration
         </text>
+        }
         <text
           className="circle-text-value"
           x="50%"
           y="50%"
-          dy="1.3em"
+          dy={scoreText.length > 0 ? '1.3em' : '0.3em'}
+          style={{ fontSize: scoreText.length > 0 ? '32px' : '17px', fontWeight: scoreText.length > 0 ? '600' : '500' }}
           textAnchor="middle">
           {`${progressValue}%`}
         </text>

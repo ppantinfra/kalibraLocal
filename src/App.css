@@ -76,9 +76,10 @@ body {
 }
 
 .circle-text-value {
-  font-size:  32px;
-  font-weight: 600;
+  font-size:  17px;
+  font-weight: 500;
   fill:#222B45;
+  font-family: 'poppins';
 }
 .circle-text {
   font-size: 22px;

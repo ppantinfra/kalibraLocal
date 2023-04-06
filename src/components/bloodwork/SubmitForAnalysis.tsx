@@ -202,7 +202,7 @@ const SubmitForAnalysis = ({ clientId, closePopup }: IProps) => {
                     }}
                   >
                     {Array.from(new Array(numPages), (el, index) => (
-                      <Button onClick={() => setSelectedPageNumber(index + 1)} >
+                      <Button key={index} onClick={() => setSelectedPageNumber(index + 1)} >
                         <Page
                           key={index}
                           loading={''}

@@ -14,7 +14,8 @@ const SearchClient = ({ searchHandler }) => {
         handleSubmit,
         formState: { errors }
     } = useForm({
-        mode: 'onChange'
+        mode: 'onChange',
+        shouldFocusError: false
 
     });
     return (
@@ -36,7 +37,7 @@ const SearchClient = ({ searchHandler }) => {
                             controlName={'email'}
                             register={register}
                             errors={errors}
-                            rules={{ required: true, pattern: pattern.EmailPattern }}
+                            rules={{ required: true, pattern: pattern.EmailPattern, maxLength: 255 }}
                         />
                     </Box>
                     <Box className={classes.buttonBox}>

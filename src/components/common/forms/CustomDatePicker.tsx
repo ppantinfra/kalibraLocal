@@ -80,12 +80,8 @@ const CustomDatePicker = (props: IInputProps) => {
                             {props.errors[props.controlName].message}
                         </p>
                     )}
-
-
                 </Box>}
-
             </Box>
-
 
             <Box className='pickerBox'>
                 {/* <label className={datePickerClasses.lblName}>{props.labelName}</label> */}
@@ -94,13 +90,13 @@ const CustomDatePicker = (props: IInputProps) => {
                         rules={props.rules}
                         control={props.control}
                         name={props.controlName}
-                        defaultValue={props.defaultValue}
+                        defaultValue={props.defaultValue || null}
                         render={({
                             field: { onChange, value },
                         }) => (
                             <>
                                 <DesktopDatePicker
-                                    value={value || new Date()}
+                                    value={value || null}
                                     onChange={(date) => {
                                         onChange(date);
                                         if (props.changeHanlder) {

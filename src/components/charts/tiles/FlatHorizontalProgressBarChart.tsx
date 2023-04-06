@@ -36,9 +36,10 @@ const FlatHorizontalProgressBarChart = ({ data, willHideTitle, popSize }: Props)
   };
 
   data?.categories?.forEach((element) => {
-    if (data.value >= element.minimum && data.value <= element.maximum) {
+    if (Number(data.value) >= element.minimum && Number(data.value) <= element.maximum) {
       progressBarData.pointColor = ColorHelper.getBarColor(element.color, data.category);
     }
+
     progressBarData.visualParts.push({
       maxValue: element.maximum,
       minValue: element.minimum,

@@ -14,11 +14,6 @@ import { StyledEngineProvider } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
 import upArrowIconIg from '../../assets/images/upArrowIcon.svg';
 import downArrowIconIg from '../../assets/images/downArrowIcon.svg';
-// import { RoutesPath as route } from '../../core/constants';
-// import { CommonContext, CommonContextType } from '../../core/context';
-import { ActionDrawerEnum } from '../../core/enums';
-import DrawerActionSidebar from '../layouts/drawer/DrawerActionSidebar';
-import ViewAssessmentDetailsScreen from '../../pages/interactionSystems/assessments/ViewAssessmentDetailsScreen';
 import { RoutesPath as route } from '../../core/constants';
 import DateFormatterHelper from '../../core/helper/DateFormatterHelper';
 
@@ -27,25 +22,12 @@ const ClientAssessmentsList = ({ assessments, clientId, sortHandler }) => {
   const navigate = useNavigate();
   const [sortClickedArray, setSortClickedArray] = useState<string[]>([]);
 
-  // const sortClick = (property: string, type: string, objKey?: string) => {};
-  const [selectedAssessment, setSelectedAssessment] = React.useState<any>(''); //used for sending assesment id in case of edit view open on drawer
-  const [showViewAssessmentDialog, setShowViewAssessmentDialog] = React.useState<boolean>(false);
-
-  const toggleRightDrawer = (value: boolean, type?: string) => {
-    navigate(location.pathname, { replace: true }); // this is used to clear the state after closing any of the drawer so that after drawer closing if user refresh
-    //the browserr then no drawer will open by default
-    if (type === ActionDrawerEnum.ViewAssessmentDrawer) {
-      setShowViewAssessmentDialog(value);
-    }
-  };
-
   const viewAssessmentReport = (assessmentReport: any) => {
-    // setSelectedAssessment(assessmentReport?.assessmentId);
-    // setShowViewAssessmentDialog(true);
     navigate(`/${route.ASSESSMENT}/${route.VIEWASSESSMENT}`, {
       state: {
         reportId: assessmentReport?.assessmentId,
-        clientId: clientId
+        clientId: clientId,
+        isInactiveClient: true
       }
     });
   };
@@ -66,18 +48,6 @@ const ClientAssessmentsList = ({ assessments, clientId, sortHandler }) => {
 
   return (
     <React.Fragment>
-      <DrawerActionSidebar
-        open={showViewAssessmentDialog}
-        toggleDrawer={toggleRightDrawer}
-        component={
-          <ViewAssessmentDetailsScreen
-            reportIdProp={selectedAssessment}
-            componentOpenOnDialog={true}
-          />
-        }
-        drawerType={ActionDrawerEnum.ViewAssessmentDrawer}
-        anchor="bottom"
-      />
       <StyledEngineProvider injectFirst>
         <TableContainer component={Paper} className={classes.mui_tableContainer}>
           <Table

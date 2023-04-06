@@ -38,7 +38,7 @@ const ResetPasswordForm: React.FC<RegistrationProps> = (props) => {
         <form className={`${classes.formContent} signinForm`} method="get" noValidate={false}>
           <Typography className={classes.loginHeading}>Reset Password</Typography>
           <Typography sx={{ fontSize: '14px', fontFamily: 'Poppins', color: '#000000', marginTop: '24px' }}>
-            Enter the email address associated with your account and we’ll send you a link to reset your password.
+            Enter the email address associated with your account and we’ll send you a link to reset your password if an account exists.
           </Typography>
 
           {/* Email */}
@@ -55,7 +55,7 @@ const ResetPasswordForm: React.FC<RegistrationProps> = (props) => {
                 controlName={'email'}
                 register={register}
                 errors={errors}
-                rules={{ required: true, pattern: pattern.EmailPattern }}
+                rules={{ required: true, pattern: pattern.EmailPattern, maxLength: 255 }}
               />
             </Box>
           </Box>

@@ -11,6 +11,9 @@ import PillarIcon from '../../common/PillarIcon';
 import { moveActivityKeyMap, restActivityKeyMap, showValueAndUnit, isNullGroup } from '../ActivityMapKey';
 import Tooltip from '@mui/material/Tooltip';
 import DateFormatterHelper from '../../../core/helper/DateFormatterHelper';
+import BarChart from '../../charts/bar/BartChart';
+import HypnogramChart from '../../charts/bar/HypnogramChart';
+
 
 type IProps = {
   open: boolean;
@@ -86,7 +89,7 @@ const ActivityDetail = ({
   const BreathGroup = {
     firstKey: undefined,
     name: 'Breath',
-    keys: ['breathsAvgBreathsPerMin', 'breathsMaxBreathsPerMin', 'breathsMinBreathsPerMin', 'breathsOnDemandReading', 'oxygenSaturationOnDemandReading', 'oxygenSaturationStartTime', 'oxygenSaturationEndTime', 'breathsStartTime', 'breathsEndTime']
+    keys: ['breathsAvgBreathsPerMin', 'breathsMaxBreathsPerMin', 'breathsMinBreathsPerMin', 'breathsOnDemandReading', 'breathsStartTime', 'breathsEndTime', 'oxygenSaturationOnDemandReading', 'oxygenSaturationStartTime', 'oxygenSaturationEndTime']
   };
   const sleepDurationGroup = {
     firstKey: undefined,
@@ -108,6 +111,59 @@ const ActivityDetail = ({
     name: 'Sleep Efficiency',
     showGraph: true,
     keys: ['sleepAwakeWaso', 'sleepDurationPlanned', 'sleepAwakeDurationAwakeState', 'sleepAwakeDurationBeforeSleeping', 'sleepAwakeDurationAfterWakeup', 'sleepDurationInBed', 'sleepDurationUnmeasurableSleep', 'sleepAwakeDurationLongInterruption', 'sleepAwakeDurationShortInterruption', 'sleepAwakeNumOutOfBedEvents', 'sleepAwakeNumWakeupEvents', 'sleepAsleepNumRemEvents']
+  };
+
+  const graphData = [
+    { key: 'breathsAvgBreathsPerMin', data: data.breathsSamples, name: 'Breath', min: 0, max: 30, isHypnogram: false },
+    { key: 'oxygenSaturationStartTime', data: data.oxygenSaturationSamples, name: 'Oxygen Saturation', min: 75, max: 100, isHypnogram: false },
+    { key: 'heartRateMaxHrBpm', data: data.heartRateHrSamples, name: 'Heart Rate', min: 0, max: 200, isHypnogram: false },
+    { key: 'heartRateAvgHrVariabilityRmssd', data: data.heartRateHrvSamplesRmssd, name: 'Heart Rate Rmssd', min: 0, max: 200, isHypnogram: false },
+    { key: 'heartRateAvgHrVariabilitySsdn', data: data.heartRateHrvSamplesSsdn, name: 'Heart Rate Ssdn', min: 0, max: 200, isHypnogram: false },
+    { key: 'sleepAsleepDurationAsleepState', data: data.sleepHypnogramSamples, name: 'Sleep', min: 0, max: 200, isHypnogram: true },
+  ];
+
+  const renderItem = (key: string) => {
+    if (data[key] === null || data[key] === '0') {
+      return <></>;
+    }
+
+    return (<Box key={key} style={{ flexBasis: '32%', alignContent: 'center', justifyContent: 'center', alignItems: 'center', columnGap: '0px', marginTop: '16px' }}>
+      <Typography
+        className={classes.marker}
+      >
+        {keyMap[key].name}
+      </Typography>
+      <Typography
+
+        className={classes.markerValue}
+      >
+        {showValueAndUnit(data[key], keyMap[key].unit)}
+      </Typography>
+    </Box>);
+  };
+
+  const renderChar = (key: string) => {
+    if (data[key] === null || data[key] === '0') {
+      return <></>;
+    }
+    const chartData = graphData.find(item => item.key === key);
+    if (chartData) {
+      return <>
+        {chartData.data?.length > 0 && category !== 'Move' &&
+          <Box sx={{ padding: '8px 0px 6px 0px !important', width: '100%' }}>
+            {chartData.isHypnogram === true ?
+              <HypnogramChart chartData={{ data: JSON.parse(chartData.data).data, minY: chartData.min, maxY: chartData.max, name: chartData.name }} />
+              :
+              <BarChart chartData={{ data: JSON.parse(chartData.data).data, minY: chartData.min, maxY: chartData.max, name: chartData.name }} />
+            }
+          </Box>
+        }
+        { renderItem(key)}
+
+
+      </>;
+    }
+    return renderItem(key);
   };
 
   const renderGroup = (group: any) => {
@@ -154,23 +210,13 @@ const ActivityDetail = ({
             </Box>
           }
           <Box style={{ display: 'flex', flex: 1, flexWrap: 'wrap', flexDirection: 'row', columnGap: '4px' }}>
+            {category === 'Move' && String(group.name).toUpperCase() === 'HEART RATE' && data.heartRateHrSamples && data.heartRateHrSamples.length > 0 &&
+              <Box sx={{ padding: '8px 0px 6px 0px !important', width: '100%' }}>
+                <BarChart chartData={JSON.parse(data.heartRateHrSamples)} />
+              </Box>
+            }
             {group.keys.map((item) => {
-              if (data[item] === null || data[item] === '0') {
-                return <></>;
-              }
-              return (<Box key={item} style={{ flexBasis: '32%', alignContent: 'center', justifyContent: 'center', alignItems: 'center', columnGap: '0px', marginTop: '16px' }}>
-                <Typography
-                  className={classes.marker}
-                >
-                  {keyMap[item].name}
-                </Typography>
-                <Typography
-
-                  className={classes.markerValue}
-                >
-                  {showValueAndUnit(data[item], keyMap[item].unit)}
-                </Typography>
-              </Box>);
+              return renderChar(item);
             })}
           </Box>
         </Box>

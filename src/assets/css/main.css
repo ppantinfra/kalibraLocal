@@ -311,6 +311,7 @@ tr.MuiTableRow-root.MuiTableRow-hover.tablebodyRow.css-1qkwuln-MuiTableRow-root:
   color: #FF3D71;
   display: initial;
   font-weight: 500;
+  font-size: 11px !important;
 }
 
 .formInputLabels {
@@ -2054,6 +2055,10 @@ color: #222B45;
 }
 .css-kcnnn4-MuiButtonBase-root-MuiPickersDay-root.Mui-selected {
   border: 1px solid rgba(0, 0, 0, 0.6);
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
 }
 @media (max-width:992px){
   .responive-mobility-responsive{

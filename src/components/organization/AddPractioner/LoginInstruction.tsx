@@ -82,7 +82,7 @@ const LoginInstruction = ({ userDetails, addAnotherPractionerHandler }) => {
         width: '95%'
       }}
       closeBtn={true}
-      closeBtnHandler={()=>navigate(-1)}
+      closeBtnHandler={() => navigate(-1)}
     >
       <Box
         sx={{
@@ -117,7 +117,7 @@ const LoginInstruction = ({ userDetails, addAnotherPractionerHandler }) => {
               register={register}
               errors={errors}
               defaultValue={userDetails?.email}
-              rules={{ required: true }}
+              rules={{ required: true, maxLength: 255 }}
               disabled
             />
           </Box>
@@ -154,7 +154,8 @@ const LoginInstruction = ({ userDetails, addAnotherPractionerHandler }) => {
                 register={register}
                 errors={errors}
                 rules={{
-                  required: true
+                  required: true,
+                  maxLength: 255
                 }}
                 inputIndormentElement={
                   <IconButton

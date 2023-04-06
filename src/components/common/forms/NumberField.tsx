@@ -25,6 +25,10 @@ export interface IInputProps {
 }
 
 const NumberField = (props: IInputProps) => {
+  const onlyNumbers = (e) => {
+    e.target.value = e.target.value.replace(/[^0-9.,]/g, '');
+  };
+
   return (
     <React.Fragment>
       <Box className={'formInputLabels'}>
@@ -43,14 +47,17 @@ const NumberField = (props: IInputProps) => {
         fullWidth={props.fullWidth}
         id={props.id}
         size={props.size}
-        sx={{  ...(props.labelName && {
-          marginTop: '5px',
-        }), }}
+        sx={{
+          ...(props.labelName && {
+            marginTop: '5px',
+          }),
+        }}
         // label={props.labelName}
         className={props.errors[props.controlName] ? 'invalid-parentBox ' : ''}
         placeholder={props.placeholder}
-        type="number"
+        type="text"
         variant="outlined"
+        onInput={(e) => onlyNumbers(e)}
         {...props.register(props.controlName, { ...props.rules })}
         InputProps={{
           autoComplete: 'off',

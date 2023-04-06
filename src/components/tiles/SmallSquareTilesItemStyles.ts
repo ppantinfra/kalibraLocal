@@ -14,10 +14,7 @@ export const useSmallSquareTilesItemStyles = makeStyles(
       background: '#fff',
       borderRadius: '10px',
       textAlign: 'center',
-      // width: "159px",
-      // width: "159px",
       height: '162px',
-
       boxShadow:
       '0px 10px 22px rgb(143 155 179 / 1%), 0px 25px 19px rgb(143 155 179 / 5%), 0px 14px 14px rgb(143 155 179 / 9%), 0px 4px 8px rgb(143 155 179 / 10%), 0px 0px 0px rgb(143 155 179 / 10%)',
     },

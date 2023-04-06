@@ -28,6 +28,7 @@ const CompareMeasurementPage = 'Compare Measurement';
 const AddPicturePage = 'Add Picture';
 const ComparePicturePage = 'Compare Picture';
 const AddPractionerPage = 'Add Practitioner';
+const IntelligenceDashboardPage = 'Intelligence Dashboard';
 
 export const screenTitle = {
   ClientOverviewPage,
@@ -59,5 +60,6 @@ export const screenTitle = {
   CompareMeasurementPage,
   AddPicturePage,
   ComparePicturePage,
-  AddPractionerPage
+  AddPractionerPage,
+  IntelligenceDashboardPage
 };

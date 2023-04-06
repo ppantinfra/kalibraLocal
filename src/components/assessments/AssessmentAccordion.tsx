@@ -11,6 +11,9 @@ import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { RoutesPath as route } from '../../core/constants';
+import * as pattern from '../../core';
+import { InputLabel } from '@mui/material';
 
 interface Props {
   assessmentGroups: any[];
@@ -61,7 +64,8 @@ const GenerateInputFields = ({
           validate: {
             checkRange: (v: any) =>
               emptyAndRangeValidator(v, healthMarker.rangeMin, healthMarker.rangeMax) || 'Not within expected range'
-          }
+          },
+          pattern: pattern.AseesmentFieldPattern
         }}
         minRange={healthMarker.rangeMin}
         maxRange={healthMarker.rangeMax}
@@ -117,9 +121,11 @@ const AssessmentAccordion = ({
     formState: { errors },
     reset
   } = useForm({
-    mode: 'onChange'
+    mode: 'onChange',
+    shouldFocusError: false
   });
   const [showSuccessPopup, setShowSuccessPopup] = useState<boolean>(false);
+  const [addedReportId, setAddedReportId] = useState<string>('');
   const [openMediaModal, setOpenMediaModal] = useState(false);
   const [mediaContentData, setMediaContentData] = useState<any>([]);
   const [mediaContentInfoWhat, setMediaContentInfoWhat] = useState<any>('');
@@ -196,8 +202,6 @@ const AssessmentAccordion = ({
     } else {
       setOpenAccordionIndex(current => [...current, panel]);
     }
-
-
     setExpandedAccordionIndex(isExpanded ? panel : false);
   };
 
@@ -248,17 +252,19 @@ const AssessmentAccordion = ({
       };
 
       // Api calling
-      await UserService.addNewAssessment(bodyToPost).then(() => {
-        // if (res) {
-        setShowSuccessPopup(true);
-        // }
+      await UserService.addNewAssessment(bodyToPost).then((responseData) => {
+        if (responseData) {
+          if ((responseData as any).id) {
+            setAddedReportId((responseData as any).id);
+          }
+          setShowSuccessPopup(true);
+        }
       });
     }
   };
 
   const updateAssesment = async (data: any) => {
     const dataArray: any = Object.entries(data);
-
     const healthMarkersArrayToPost: { userHealthMarkerId: number; value: string; version: number }[] = []; // used for setting healthMarkers at the time of hitting api
     const commentsArrayToPost: {
       commentId: number;
@@ -330,8 +336,13 @@ const AssessmentAccordion = ({
     setMediaContentData(healthMarker.mediaContent.length > 0 && healthMarker.mediaContent);
   };
 
-  const goBack = () => {
-    navigate(-1);
+  const goToAssessmentDetailPage = () => {
+    navigate(`/${route.ASSESSMENT}/${route.VIEWASSESSMENT}`, {
+      state: {
+        reportId: isEdit ? reportId : addedReportId,
+      },
+      replace: true
+    });
   };
 
   return (
@@ -421,25 +432,34 @@ const AssessmentAccordion = ({
                                   {/* Comment field only showning when there is atleast one healthmarker of any subgroups */}
 
                                   {grp.showAccordion && (
-                                    <Box className={classes.commentBox} id={'commentBox'}>
-                                      <InputField
-                                        // id="outlined-multiline-comment"
-                                        labelName="Comments"
-                                        controlName={
-                                          isEdit
-                                            ? 'comment' +
-                                            String(grp.comment?.commentId) +
-                                            '-version-' +
-                                            grp.comment?.version
-                                            : 'comment' + String(grp.id)
-                                        }
-                                        register={register}
-                                        errors={errors}
-                                        variant="outlined"
-                                        multiline={true}
-                                        rows={4}
-                                        sx={{ width: '100%', marginTop: '5px' }}
-                                      />
+                                    <Box sx={{ marginTop: '2vmax' }}>
+                                      <InputLabel htmlFor="email-label" className={classes.labelClassName}>
+                                        Comments:
+                                      </InputLabel>
+                                      <Box className={classes.commentBox} id={'commentBox'}>
+                                        <InputField
+                                          hideLabelName={true}
+                                          labelName="Comments"
+                                          controlName={
+                                            isEdit
+                                              ? 'comment' +
+                                              String(grp.comment?.commentId) +
+                                              '-version-' +
+                                              grp.comment?.version
+                                              : 'comment' + String(grp.id)
+                                          }
+                                          register={register}
+                                          rules={{
+                                            required: false,
+                                            maxLength: 2000
+                                          }}
+                                          errors={errors}
+                                          variant="outlined"
+                                          multiline={true}
+                                          rows={4}
+                                          sx={{ width: '100%', marginTop: '5px' }}
+                                        />
+                                      </Box>
                                     </Box>
                                   )}
 
@@ -448,10 +468,6 @@ const AssessmentAccordion = ({
                             </AccordionDetails>
                           </Accordion>
                         )}
-
-
-
-
                       </React.Fragment>
                     ))}
 
@@ -481,7 +497,7 @@ const AssessmentAccordion = ({
                     successMessage={isEdit ? 'Assessment successfully updated' : 'Assessment successfully added'}
                     successDescription=""
                     successNotifyMessage=""
-                    successDialogCloseHandler={goBack}
+                    successDialogCloseHandler={goToAssessmentDetailPage}
                     showDoneButton={true}
                   />
                 )}

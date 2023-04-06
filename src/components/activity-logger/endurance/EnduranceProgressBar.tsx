@@ -8,7 +8,7 @@ export type EnduranceProgressBarType = {
     progressColor: string;
     progressText: string;
     scoreProgressLabel: string;
-    scoreProgressDone: number
+    scoreProgressDone: any
 };
 
 type Iprops = {
@@ -37,7 +37,7 @@ const EnduranceProgressBar = ({ chartData }: Iprops) => {
 
 
             <div className='enduranceProgress' >
-                <ScoreDriversProgressBarView category="Move" data={[{ 'done': chartData?.scoreProgressDone, 'progressLabel': chartData?.scoreProgressLabel }]} />
+                <ScoreDriversProgressBarView category="Move" data={[{ 'done': chartData?.scoreProgressDone?.done, doneNumber: chartData?.scoreProgressDone?.doneText, 'progressLabel': chartData?.scoreProgressLabel }]} />
             </div>
 
         </React.Fragment>

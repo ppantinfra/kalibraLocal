@@ -10,7 +10,6 @@ import { AssessmentMediaContent } from '../../assessments';
 
 const ProgressLine = ({
   label,
-  // expected format for visual parts
   visualParts,
   total,
   point,
@@ -31,7 +30,6 @@ const ProgressLine = ({
 
   const classes = useProgressLineStyles();
   const [openMediaModal, setOpenMediaModal] = useState(false);
-  // const classes = useAssessmentStyles();
 
   const [widths, setWidths] = useState(
     visualParts && visualParts.map(() => {
@@ -101,36 +99,21 @@ const ProgressLine = ({
     return renderChartWithoutVisualParts();
   }
 
-  // const lastVisualParts = visualParts[Object.keys(visualParts)[Object.keys(visualParts).length - 1]];
-  // if (lastVisualParts && lastVisualParts.maxValue < point) {
-  //   point = lastVisualParts.maxValue;
-  // }
-
-
-  // if (visualParts[0] && visualParts[0].minValue > point) {
-  //   point = visualParts[0].minValue;
-  // }
-
-  let calculatedPoint = point;
-  // if (data?.key === 'SleepHours') {
-  //   calculatedPoint = calculatedPoint / 60.0;
-  // }
-
   // clamp the value in [min, max] range
-  if (calculatedPoint < data.minValue) {
-    calculatedPoint = data.minValue;
-  } else if (calculatedPoint > data.maxValue) {
-    calculatedPoint = data.maxValue;
+  let calculatedValue = point;
+  if (calculatedValue < data.minValue) {
+    calculatedValue = data.minValue;
+  } else if (calculatedValue > data.maxValue) {
+    calculatedValue = data.maxValue;
   }
 
-  let leftCal = (calculatedPoint * 100) / total;
-
+  let leftCal = (calculatedValue * 100) / total;
   if (visualParts[0]) {
-    leftCal = ((calculatedPoint - visualParts[0].minValue) * 100) / total;
+    leftCal = ((calculatedValue - visualParts[0].minValue) * 100) / total;
   }
-
-  const sample1 = 5; //parseInt(visualParts[0].minValue) + 5;
-
+  leftCal = leftCal < 0 ? 0 : leftCal;
+  leftCal = leftCal > 100 ? 100 : leftCal;
+  const sample1 = 5;
   const divStyle: any = {
     left: 'calc(' + leftCal + '% - ' + sample1 + 'px)',
     fallbacks: [
@@ -151,7 +134,6 @@ const ProgressLine = ({
             display={isIntelligenceProgressBarChart === true ? 'none' : 'block'}
           >
             {label} <PillarIcon pillarName={category} />
-
           </Typography>
           {isShowInfoIcon === true &&
             <InfoOutlinedIcon
@@ -162,17 +144,12 @@ const ProgressLine = ({
             />
           }
         </Box>
-
         {unit.length === 0 && <Skeleton animation="wave" height={10} style={{ marginLeft: '6px', width: '3vmax' }} />}
       </Box>
-      {/* )} */}
-
       {showLabelLeftside && <div className="unit">
         {NumberConversion(Number(point))}
         {' '}<span style={{ fontWeight: '400', fontSize: '13px' }}>{unit !== 'count' ? unit : label}</span>
       </div>}
-
-
       {unit.length > 0 && (
         <Box className={`${classes.graphWrapper} graphWrapper_clientView`}>
           <Box style={divStyle} className={classes.mainBox}>
@@ -195,17 +172,6 @@ const ProgressLine = ({
           </Box>
 
           <Box className={classes.progressVisualFull}>
-            {/* {data.graphType === GraphType.HorizontalStackedBarChartGrouped && (
-              <Box className={classes.unGroupedLabel}>
-                <Typography
-                  paragraph
-                  className={`${classes.apg_SubText} apg_SubText_assessment`}
-                  title={label}
-                >
-                  {label}
-                </Typography>
-              </Box>
-            )} */}
             {visualParts.map(
               (
                 item: {
@@ -239,7 +205,6 @@ const ProgressLine = ({
                           {item.range}
                         </span>
                       )}
-
                       <span className={`${classes.itemLabel} itemLabel_assessment itemLabel_clientBiew`}>
                         {item.label}
                       </span>
@@ -248,25 +213,6 @@ const ProgressLine = ({
                 );
               }
             )}
-
-            {/* {point > lastVisualParts.maxValue ? (
-            <Box
-              key="end"
-              style={{
-                width: "10%",
-                backgroundColor: lastVisualParts.color,
-                textAlign: "center",
-              }}
-              title={lastVisualParts.label}
-              className={classes.progressVisualPart}
-            >
-              <span
-                style={{ fontSize: "10px" }}
-              >{`${lastVisualParts.maxValue} - ${point}`}</span>
-            </Box>
-          ) : (
-            <></>
-          )} */}
           </Box>
         </Box>
       )}

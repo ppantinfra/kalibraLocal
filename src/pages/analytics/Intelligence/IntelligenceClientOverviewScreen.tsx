@@ -4,9 +4,10 @@ import Back from '../../../components/common/Back';
 import { screenTitle, RoutesPath as route } from '../../../core/constants';
 import { useNavigate } from 'react-router-dom';
 import ClientSearch from '../../../components/client-search/ClientSearch';
-import IntelligenceDashboard from '../../../components/intelligence/IntelligenceDashboard';
+// import IntelligenceDashboard from '../../../components/intelligence/IntelligenceDashboard';
 import DrawerActionSidebar from '../../../components/layouts/drawer/DrawerActionSidebar';
 import IntelligenceTrendingReport from '../../../components/intelligence/IntelligenceTrendingReport';
+import { IntelligenceClientDashboard } from '../../../components/intelligence';
 
 
 const IntelligenceClientOverviewScreen = () => {
@@ -18,14 +19,14 @@ const IntelligenceClientOverviewScreen = () => {
   const [scoreDetailData, setScoreDetailData] = useState<any>();
   const [, setExternalKey] = useState<any>();
 
-  const handleDrawerOpen = (key: string, name: string, data?: any, score?: any, unit?: any) => {
-    setOpen(true);
-    setScoreDetailData(data);
-    setExternalKey(key);
-    setSidebarHeader(name);
-    setTrendScore(score);
-    setTrendScoreUnit(unit);
-  };
+  // const handleDrawerOpen = (key: string, name: string, data?: any, score?: any, unit?: any) => {
+  //   setOpen(true);
+  //   setScoreDetailData(data);
+  //   setExternalKey(key);
+  //   setSidebarHeader(name);
+  //   setTrendScore(score);
+  //   setTrendScoreUnit(unit);
+  // };
   const tableReportClickHandler = (name: string, unit: string) => {  // this is called on click of drawer view detailed report and on each tile action button
     navigate(`/${route.INTELLIGENCECLIENTLISTROUTE}`, { state: { tableHeader: name, unitText: unit } });
   };
@@ -65,7 +66,8 @@ const IntelligenceClientOverviewScreen = () => {
           <ClientSearch selectedUserId='' userSelectHandler={onUserSelect} diableChooseClientScreen={true} />
         </Box>
       </Box>
-      <IntelligenceDashboard tableReportClickHandler={tableReportClickHandler} handleDrawerOpen={handleDrawerOpen} />
+      <IntelligenceClientDashboard />
+      {/* <IntelligenceDashboard tableReportClickHandler={tableReportClickHandler} handleDrawerOpen={handleDrawerOpen} /> */}
     </React.Fragment>
   );
 };

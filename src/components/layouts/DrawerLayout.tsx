@@ -21,6 +21,7 @@ import Menu from '@mui/material/Menu';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
 import TooltipHelper from '../../core/helper/TooltipHelper';
+import { UserService } from '../../core';
 
 const DrawerLayout = ({ outlet }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -32,7 +33,7 @@ const DrawerLayout = ({ outlet }) => {
     setAnchorEl(null);
   };
 
-  const { loggedInUserName, clearContextAndLogout, tenantList, tenantKey, setTenantKey, setUserId, loggedInUserData } = useContext(
+  const { loggedInUserName, clearContextAndLogout, tenantList, tenantKey, setTenantKey, setUserId, setShowManageOrg, loggedInUserData } = useContext(
     CommonContext
   ) as CommonContextType;
   const navigate = useNavigate();
@@ -42,22 +43,50 @@ const DrawerLayout = ({ outlet }) => {
   const [showOrganisation, setShowOrganisation] = React.useState<boolean>(false);
 
 
-  useEffect(() => {
-    setShowOrganisation(false);
+
+  const getUserRolesObject = React.useCallback(async () => {
     const userData = JSON.parse(loggedInUserData);
-    if (userData) {
-      const userRoles = userData.roles;
-      if (userRoles) {
-        const allRoles = JSON.parse(userRoles);
-        for (const roles of allRoles) {
-          if (roles?.tenant === tenantKey)
-            if (roles?.isAdmin) {
-              setShowOrganisation(true);
-            }
-        }
+    setShowOrganisation(false);
+    // setShowManageOrg(false);
+    await UserService.getUserDetails(userData?.cognitoId).then((res: any) => {
+      const allRoles = res?.data?.roles;
+      for (const roles of allRoles) {
+        if (roles?.tenant === tenantKey)
+          if (roles?.isAdmin) {
+            setShowOrganisation(true);
+            // setShowManageOrg(true);
+          }
       }
-    }
-  }, [loggedInUserData, tenantKey]);
+    });
+  }, [tenantKey, loggedInUserData]);
+
+
+  // useEffect(() => {
+  //   setShowOrganisation(false);
+  //   const userData = JSON.parse(loggedInUserData);
+  //   if (userData) {
+  //     const userRoles = userData.roles;
+  //     if (userRoles) {
+  //       const allRoles = JSON.parse(userRoles);
+  //       for (const roles of allRoles) {
+  //         if (roles?.tenant === tenantKey)
+  //           if (roles?.isAdmin) {
+  //             setShowOrganisation(true);
+  //           }
+  //       }
+  //     }
+  //   }
+  // }, [loggedInUserData, tenantKey]);
+
+
+  useEffect(() => {
+    getUserRolesObject();
+  }, [getUserRolesObject]);
+
+
+  useEffect(() => {
+    setShowManageOrg(showOrganisation);
+  }, [showOrganisation, setShowManageOrg]);
 
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpenSideBar(newOpen);

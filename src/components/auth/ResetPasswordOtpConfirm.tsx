@@ -72,7 +72,7 @@ const ResetPasswordOtpConfirm = ({ email }: IProps) => {
 
 
                 <Typography className={classes.otpHeading}>
-                    Great, nearly there! We have verified your email and sent you an OTP code
+                    {`Great, nearly there! We have verified your email(${email}) and sent you an OTP code`}
                 </Typography>
 
                 <Typography className={classes.otpDescription} >
@@ -116,7 +116,8 @@ const ResetPasswordOtpConfirm = ({ email }: IProps) => {
                                 required: true,
                                 validate: {
                                     checkPassword: (v: any) => passwordCheck(v) || passwordErrorMsg
-                                }
+                                },
+                                maxLength: 255
                             }}
                             inputIndormentElement={
                                 <IconButton

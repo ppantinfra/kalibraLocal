@@ -17,6 +17,7 @@ const ViewAssessmentDetailsScreen = ({ reportIdProp, componentOpenOnDialog }: Pr
   const { userId } = useContext(CommonContext) as CommonContextType;
   const clientId = states?.clientId;
   const [selectedUserId, setSelectedUserId] = React.useState<any>(null);
+  const [isInactiveClient, setIsInactiveClient] = React.useState<boolean>(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -36,6 +37,9 @@ const ViewAssessmentDetailsScreen = ({ reportIdProp, componentOpenOnDialog }: Pr
       }
       if (states?.reportId) { //this is called when user open page through navigation
         setSelectedReportId(states?.reportId);
+      }
+      if (states?.isInactiveClient) { //this is called when user open page through navigation
+        setIsInactiveClient(states?.isInactiveClient);
       }
     }
 
@@ -62,7 +66,7 @@ const ViewAssessmentDetailsScreen = ({ reportIdProp, componentOpenOnDialog }: Pr
       {!componentOpenOnDialog && !clientId && (
         <ClientSearch selectedUserId={selectedUserId} />
       )}
-      <AssessmentDetailsAccordion reportId={selectedReportId} clientId={clientId !== undefined ? clientId : userId} componentOpenOnDialog={componentOpenOnDialog}
+      <AssessmentDetailsAccordion reportId={selectedReportId} clientId={clientId !== undefined ? clientId : userId} isInactiveClient={isInactiveClient} componentOpenOnDialog={componentOpenOnDialog}
         editAssessmentHandler={(id) => { editAssessmentHandler(id); }}
       />
     </React.Fragment>

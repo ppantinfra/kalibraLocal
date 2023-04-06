@@ -6,6 +6,7 @@ enum LocalStorageKeys {
   TenantList = 'tenantList',
   DemoMode = 'demoMode',
   selectedUserId = 'selectedUserId',
+  manageOrg = 'ManageOrg',
 }
 
 
@@ -67,6 +68,19 @@ export const setSelectedUserIdLocal = (value: string) => {
 export const getUserIdFromLocalStorage = () => {
   const userid = localStorage.getItem(LocalStorageKeys.selectedUserId);
   return userid ? userid.toString() : '';
+};
+
+
+// Demo Mode
+export const setShowManageOrgLocal = (value: boolean | any) => {
+  localStorage.setItem(LocalStorageKeys.manageOrg, value);
+};
+
+export const getShowManageOrgLocal = () => {
+  const value = localStorage.getItem(LocalStorageKeys.manageOrg);
+  if (value) {
+    return JSON.parse(value);
+  } else return null;
 };
 
 

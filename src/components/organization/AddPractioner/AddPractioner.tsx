@@ -102,7 +102,7 @@ const AddPractioner = ({ userEmail, addAnotherPractionerHandler }) => {
                       controlName={'firstname'}
                       register={register}
                       errors={errors}
-                      rules={{ required: true }}
+                      rules={{ required: true, maxLength: 255 }}
                     />
                   </Box>
 
@@ -114,7 +114,7 @@ const AddPractioner = ({ userEmail, addAnotherPractionerHandler }) => {
                       controlName={'lastname'}
                       register={register}
                       errors={errors}
-                      rules={{ required: true }}
+                      rules={{ required: true, maxLength: 255 }}
                     />
                   </Box>
                   <Box className={classes.formGroupField}>
@@ -125,7 +125,7 @@ const AddPractioner = ({ userEmail, addAnotherPractionerHandler }) => {
                       controlName={'nickname'}
                       register={register}
                       errors={errors}
-                      rules={{ required: true }}
+                      rules={{ required: true, maxLength: 255 }}
                     />
                   </Box>
 
@@ -154,7 +154,7 @@ const AddPractioner = ({ userEmail, addAnotherPractionerHandler }) => {
                       controlName={'jobTitle'}
                       register={register}
                       errors={errors}
-                      rules={{ required: true }}
+                      rules={{ required: true, maxLength: 255 }}
                     />
                   </Box>
                 </Box>

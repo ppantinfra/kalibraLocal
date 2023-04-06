@@ -5,11 +5,8 @@ import { ReviewBloodworkGettingStarted, useBloodworkStyles } from '../../../comp
 import { Stack } from '@mui/system';
 import SubmitForAnalysis from '../../../components/bloodwork/SubmitForAnalysis';
 import ReviewBloodwork from '../../../components/bloodwork/ReviewBloodwork';
-import SubmissionProgressScreen from '../../../components/bloodwork/SubmissionProgress';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { ActionDrawerEnum } from '../../../core/enums';
-import ViewAssessmentDetailsScreen from '../assessments/ViewAssessmentDetailsScreen';
-import DrawerActionSidebar from '../../../components/layouts/drawer/DrawerActionSidebar';
 import { screenTitle, RoutesPath as route } from '../../../core/constants';
 import ClientSearch from '../../../components/client-search/ClientSearch';
 import Back from '../../../components/common/Back';
@@ -80,11 +77,12 @@ const UploadBloodworkScreen = () => {
   };
 
   const onReviewScreenUpdateButtonClick = (id: string) => {
-    setDetailId(id);
-    setShowSubmissionProgressScreen(true);
-    setShowReviewScreen(false);
-    navigate(location.pathname, { replace: true, });
-    setShowSubmitForAnalysisScreen(false);
+    navigate(`/${route.ASSESSMENT}/${route.VIEWASSESSMENT}`, {
+      state: {
+        reportId: id,
+      },
+      replace: true
+    });
   };
 
   const cancelReview = () => {
@@ -131,32 +129,6 @@ const UploadBloodworkScreen = () => {
           :
           <ReviewBloodworkGettingStarted clientId={clientId} startButtonClick={() => { setShowReviewScreen(true); }} cancelButtonClick={() => { navigate(`/${route.BLOODWORK}`); }} bloodworkId={String(bloodworkId)} createdOn={createdOn} />
       )
-      }
-
-      {showSubmissionProgressScreen && (
-        <SubmissionProgressScreen goToAssessmentDetailPage={
-          () => {
-            setShowViewAssessmentDialog(true);
-          }}
-        />
-      )}
-
-      {/* View assessment drawer */}
-      {bloodworkId !== undefined && showViewAssessmentDialog == true &&
-        <DrawerActionSidebar
-          open={showViewAssessmentDialog}
-          toggleDrawer={() => {
-            setShowViewAssessmentDialog(false);
-          }}
-          component={
-            <ViewAssessmentDetailsScreen
-              reportIdProp={detailId}
-              componentOpenOnDialog={true}
-            />
-          }
-          drawerType={ActionDrawerEnum.ViewAssessmentDrawer}
-          anchor="bottom"
-        />
       }
 
       {!showSubmitForAnalysisScreen && !showReviewScreen && !showSubmissionProgressScreen && bloodworkId === undefined && (

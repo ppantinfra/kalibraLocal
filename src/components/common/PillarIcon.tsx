@@ -55,7 +55,8 @@ const PillarIcon = ({
           fontSize: 10,
           height: isBig === true ? 24 : 24,
           borderRadius: isBig === true ? 24 : 24,
-          justifyContent: 'center'
+          justifyContent: 'center',
+          padding: '2px 2px 2px 3px'
         }}
         className={'pillarIconChip'}
       />
@@ -76,7 +77,8 @@ const PillarIcon = ({
         fontWeight: '500',
         height: 20,
         borderRadius: 34,
-        justifyContent: 'center'
+        justifyContent: 'center',
+        padding: '2px 2px 2px 3px'
       }}
       className={'pillarIconChip'}
     />

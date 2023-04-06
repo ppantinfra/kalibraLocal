@@ -53,10 +53,10 @@ COPY . .
 
 RUN sed -i 's#@PUBLIC_URL@#'"$PUBLIC_URL"'#g' package.json
 
-RUN npm ci --legacy-peer-deps
+RUN yarn install --frozen-lockfile
 
-RUN npm install -g serve
+RUN yarn global add serve
 
-RUN npm run build
+RUN yarn run build
 
-CMD npm run deploy
+CMD yarn run deploy

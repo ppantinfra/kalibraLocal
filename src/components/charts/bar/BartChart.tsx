@@ -6,20 +6,22 @@ import Box from '@mui/material/Box';
 import 'chartjs-adapter-moment';
 import { ColorHelper } from '../../../core/helper/ColorHelper';
 import annotationPlugin from 'chartjs-plugin-annotation';
+import moment from 'moment';
 
 Chart.register(...registerables);
 Chart.register(annotationPlugin);
 
-// type Props = {
-//   chartData?: any;
-// };
+type Props = {
+  chartData?: any;
+};
 
-const BarChart = () => {
+const BarChart = ({ chartData }: Props) => {
+
   const classes = useChartSyles();
   const gradient = (context: any) => {
     const ctx = context.chart.ctx;
-    const linearGradient = ctx.createLinearGradient(0, 0, 0, 120);
-    linearGradient.addColorStop(0, ColorHelper.getBarColor('green', String('Move')));
+    const linearGradient = ctx.createLinearGradient(0, 0, 0, 180);
+    linearGradient.addColorStop(0, ColorHelper.getBarColor('green', String(chartData.name ? 'Rest' : 'Move')));
     linearGradient.addColorStop(1, 'rgba(73, 243, 243, 0)');
     return linearGradient;
   };
@@ -36,23 +38,40 @@ const BarChart = () => {
       position: 'end'
     },
     scaleID: 'y',
-    value: () => 90
+    value: () => 115
   };
 
-  const labels = ['30', '60', '90'];
+  if (chartData === undefined) {
+    return <></>;
+  }
+
+  const lineData = chartData.data.map(item => {
+    return {
+      x: new Date(item.graphTime),
+      y: item.graphData
+    };
+  });
+  lineData.sort((a, b) => a.x - b.x);
+
   const data = {
-    labels: labels,
     datasets: [
       {
         fill: true,
-        lineTension: 0.5,
+        //lineTension: 0.5,
+        borderColor: ColorHelper.getBarColor('green', String(chartData.name ? 'Rest' : 'Move')),
+        borderWidth: 1,
         backgroundColor: gradient,
-        data: [160, 70, 180],
+        data: lineData,
       },
     ],
   };
 
+  const convertDateFormat = (str: string) => {
+    return moment(new Date(str)).format('hh:mm');
+  };
 
+  const min = moment(lineData[0].x).subtract(1, 'minute');
+  const max = moment(lineData[lineData.length - 1].x).add(1, 'minute');
   const options: any = {
     plugins: {
       legend: {
@@ -60,9 +79,8 @@ const BarChart = () => {
       },
       title: {
         display: true,
-        text: 'Heart Rate',
+        text: chartData.name ? chartData.name : 'Heart Rate',
         position: 'bottom'
-
       },
       annotation: {
         annotations: {
@@ -74,8 +92,8 @@ const BarChart = () => {
       y: {
         type: 'linear',
         display: true,
-        min: 0,
-        max: 200,
+        min: chartData.minY ? chartData.minY : 0,
+        max: chartData.maxY ? chartData.maxY : 200,
         beginAtZero: true,
         bounds: 'ticks',
         title: {
@@ -103,11 +121,12 @@ const BarChart = () => {
         },
       },
       x: {
-        type: 'linear',
-        beginAtZero: true,
-        display: true,
-        min: 30,
-        max: 90,
+        type: 'time',
+        time: {
+          unit: 'minute',
+        },
+        min: moment(min).toDate(),
+        max: moment(max).toDate(),
         bounds: 'ticks',
         title: {
           text: '',
@@ -119,28 +138,34 @@ const BarChart = () => {
         },
         ticks: {
           color: '#929CB0',
-          min: 0,
+          maxTicksLimit: 6,
+          // min: 0,
           font: {
             size: 10,
             weight: 500,
           },
-          autoSkip: false,
+          autoSkip: true,
           callback: function (val, index) {
             if (index === 0) {
-              return 'km';
+              return 'Time';
             }
-            return val;
+            return convertDateFormat(val);
           },
         },
       },
     },
-    responsive: true,
+    maintainAspectRatio: false,
+    //responsive: true,
   };
 
   return (
     <React.Fragment>
-      <Box className={classes.barChartBox}>
-        <Bar data={data} options={options} style={{ height: '300px' }} />
+      <Box
+        className={classes.barChartBox}
+      >
+        <Bar data={data} options={options}
+        // style={{ height: '300px' }} 
+        />
       </Box>
     </React.Fragment>
   );

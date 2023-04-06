@@ -36,7 +36,7 @@ export {
   emptyAndRangeValidator,
   confirmpasswordValidator
 } from './constants/InputValidator';
-export { EmailPattern } from './constants/Patterns';
+export { EmailPattern, AseesmentFieldPattern } from './constants/Patterns';
 export { default as UserService } from './services/user/user.service';
 export { default as WorkoutService } from './services/workout/workout.service';
 export type {

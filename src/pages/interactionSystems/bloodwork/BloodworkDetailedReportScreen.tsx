@@ -1,10 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { screenTitle, RoutesPath as route } from '../../../core/constants';
+import { RoutesPath as route } from '../../../core/constants';
 import ClientSearch from '../../../components/client-search/ClientSearch';
-import Back from '../../../components/common/Back';
 import { CommonContext, CommonContextType } from '../../../core/context';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { BloodworkDetailedreport } from '../../../components/bloodwork';
+import BloodworkReportBack from '../../../components/common/BloodworkReportBack';
 
 const BloodworkDetailedReportScreen = () => {
     const { userId } = useContext(CommonContext) as CommonContextType;
@@ -13,7 +13,7 @@ const BloodworkDetailedReportScreen = () => {
     const [bloodworkReportTitle, setBloodworkReportTitle] = useState<any>('');
     const [bloodworkReportGroup, setBloodworkReportGroup] = useState<any>('');
     const [bloodworkMeasuredDate, setBloodworkMeasuredDate] = useState<any>('');
-
+    const [bloodworkId, setBloodworkId] = useState<any>('');
 
 
     useEffect(() => {
@@ -31,6 +31,9 @@ const BloodworkDetailedReportScreen = () => {
             if (states?.bloodworkMeasuredDate) {
                 setBloodworkMeasuredDate(states?.bloodworkMeasuredDate);
             }
+            if (states?.bloodworkId) {
+                setBloodworkId(states?.bloodworkId);
+            }
         }
     }, [location?.state, navigate]);
 
@@ -39,16 +42,15 @@ const BloodworkDetailedReportScreen = () => {
     return (
         <React.Fragment>
             <ClientSearch selectedUserId={userId} />
-            <Back componentTitle={screenTitle.BloddWorkDetailReportPage} />
-            {bloodworkReportGroup && bloodworkReportTitle && bloodworkMeasuredDate && <BloodworkDetailedreport
-                bloodworkReportTitle={bloodworkReportTitle}
-                bloodworkReportGroup={bloodworkReportGroup}
-                bloodworkMeasuredDate={bloodworkMeasuredDate}
-            />}
-
-
-
-        </React.Fragment>
+            <BloodworkReportBack componentTitle={bloodworkReportTitle} score={bloodworkReportGroup.score} bloodworkId={bloodworkId} />
+            {
+                bloodworkReportGroup && bloodworkReportTitle && bloodworkMeasuredDate && <BloodworkDetailedreport
+                    bloodworkReportTitle={bloodworkReportTitle}
+                    bloodworkReportGroup={bloodworkReportGroup}
+                    bloodworkMeasuredDate={bloodworkMeasuredDate}
+                />
+            }
+        </React.Fragment >
     );
 };
 

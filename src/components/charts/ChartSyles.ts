@@ -43,7 +43,7 @@ export const useChartSyles = makeStyles(
     lineChartBox: {},
     barChartBox: { 
     '& canvas': {
-      height: '220px',
+      height: '200px !important',
     },
     },
     lineChartBox_header: {},

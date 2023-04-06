@@ -23,6 +23,7 @@ import weightIcon from '../../assets/images/weight-icon.svg';
 type Props = {
     changeHandler: any;
     filledlogDates: any[];
+    showNoLogsMessage: boolean;
 };
 
 const DatePickerFooterComponent = () => {
@@ -40,7 +41,7 @@ const DatePickerFooterComponent = () => {
     </div>);
 };
 
-const ActivityDatePicker = ({ changeHandler, filledlogDates }: Props) => {
+const ActivityDatePicker = ({ changeHandler, filledlogDates, showNoLogsMessage }: Props) => {
     const [openTemplateModal, setOpenTemplateModal] = React.useState<boolean>(
         false
     );
@@ -161,7 +162,7 @@ const ActivityDatePicker = ({ changeHandler, filledlogDates }: Props) => {
                 <Link
                     className={classes.prev_text_Link}
                     component="button"
-                    disabled={prevDate === ''}
+                    disabled={prevDate === '' || showNoLogsMessage}
                     onClick={
                         () => {
                             setOpenTemplateModal(true);

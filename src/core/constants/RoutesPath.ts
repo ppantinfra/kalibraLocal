@@ -43,6 +43,7 @@ const INTERACTIONS = ANALYTICSMODULE + '/insights';
 const INTELLIGENCE = ANALYTICSMODULE + '/intelligence';
 const INTELLIGENCECLIENTLISTROUTE = INTELLIGENCE + '/intelligenceclients';
 const INTELLIGENCECLIENTDETAILSROUTE = INTELLIGENCE + '/intelligenceclientdetails';
+const INTELLIGENCECUSTOMISEDASHBOARD = INTELLIGENCE + '/customisedashboard';
 // Product
 const PRODUCTMODULE = 'products';
 const CONSULTATIONS = PRODUCTMODULE + '/consultations';
@@ -103,5 +104,6 @@ export const RoutesPath = {
   COMPAREMEASUREMENT,
   ADDPICTURE,
   COMPAREPICTURE,
-  HELP
+  HELP,
+  INTELLIGENCECUSTOMISEDASHBOARD
 };

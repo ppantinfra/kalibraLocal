@@ -74,12 +74,13 @@ const RegistrationForm: React.FC<RegistrationProps> = (props) => {
             controlName={'email'}
             register={register}
             errors={errors}
-            rules={{ required: true, pattern: pattern.EmailPattern }}
+            rules={{ required: true, pattern: pattern.EmailPattern, maxLength: 255 }}
           />
         </Box>
       </Box>
 
       {/* Password */}
+
       <Box sx={{ mt: 4 }}>
         <InputLabel htmlFor="password-label" className={classes.labelClassName}>
           Password
@@ -97,7 +98,8 @@ const RegistrationForm: React.FC<RegistrationProps> = (props) => {
               required: true,
               validate: {
                 checkPassword: (v: any) => props.passwordCheck(v)
-              }
+              },
+              maxLength: 255
             }}
             inputIndormentElement={
               <IconButton
@@ -131,7 +133,8 @@ const RegistrationForm: React.FC<RegistrationProps> = (props) => {
               required: true,
               validate: {
                 checkConfirmPassword: (v: any) => props.confirmpasswordCheck(v)
-              }
+              },
+              maxLength: 255
             }}
             inputIndormentElement={
               <IconButton
@@ -164,11 +167,12 @@ const RegistrationForm: React.FC<RegistrationProps> = (props) => {
                 }}
                 hideLabelName={true}
                 placeholder="First Name"
+                labelName="First Name"
                 type="text"
                 controlName={'firstName'}
                 register={register}
                 errors={errors}
-              // rules={{ required: true }}
+                rules={{ required: true, maxLength: 255 }}
               />
             </Box>
           </Box>
@@ -184,12 +188,13 @@ const RegistrationForm: React.FC<RegistrationProps> = (props) => {
                   }
                 }}
                 hideLabelName={true}
+                labelName="Last Name"
                 placeholder="Last Name"
                 type="text"
                 controlName={'lastName'}
                 register={register}
                 errors={errors}
-              // rules={{ required: true }}
+                rules={{ required: true, maxLength: 255 }}
               />
             </Box>
           </Box>
@@ -209,7 +214,7 @@ const RegistrationForm: React.FC<RegistrationProps> = (props) => {
             controlName={'nickname'}
             register={register}
             errors={errors}
-            rules={{ required: true }}
+            rules={{ required: true, maxLength: 255 }}
           />
         </Box>
       </Box>

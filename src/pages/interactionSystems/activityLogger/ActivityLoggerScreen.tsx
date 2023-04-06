@@ -17,7 +17,7 @@ import strengthIcon from '../../../assets/images/activity-log/strengthIcon.png';
 
 
 const ActivityLoggerScreen = () => {
-  const { userId, demoMode } = useContext(CommonContext) as CommonContextType;
+  const { userId } = useContext(CommonContext) as CommonContextType;
   const classes = useActivityLoggerScreenStyles();
   const [selectedTabValue, setSelectedTabValue] = React.useState('excerciseLog');
   const [openTemplateModal, setOpenTemplateModal] = React.useState<boolean>(
@@ -94,7 +94,7 @@ const ActivityLoggerScreen = () => {
             </Box> */}
             <Box>
               <TabContext value={selectedTabValue}>
-                {demoMode === true &&
+                
                   <Box className={`${classes.tabListRow} activityLogTab`}>
 
                     <TabList
@@ -169,7 +169,7 @@ const ActivityLoggerScreen = () => {
                     </Box>
                   )} */}
                   </Box>
-                }
+                
                 <TabPanel value={'excerciseLog'} className={classes.tabPanel}>
                   <ActivityLogger clientId={selectedUserId} />
                 </TabPanel>

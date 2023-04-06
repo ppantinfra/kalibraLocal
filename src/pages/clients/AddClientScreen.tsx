@@ -70,6 +70,7 @@ const AddClientScreen = () => {
   const goBackToSearchEmailScreen = () => {
     setShowEmailNotMatchModal(false);
     setShowEmailMatchModal(false);
+    setInviteSent(false);
   };
 
   //match screen methods

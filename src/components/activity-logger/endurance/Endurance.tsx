@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import { FontColor, FontFamily } from '../../../core';
+import { UserService, FontColor, FontFamily } from '../../../core';
 import { TilesView } from '../../tiles';
 import Grid from '@mui/material/Grid';
 import imageHeadingIcon from '../../../assets/images/activity-log/strength/imageHeadingIcon.svg';
@@ -38,58 +38,239 @@ const Endurance = ({ clientId }: Iprops) => {
         setSelectedPillar(pillarScores[0]);
     }, [pillarScores]);
 
-    const getCompareMeasurements = (_clientId: any) => {
-        console.debug(_clientId);
+    const scoreToPercentage = (scoreValue: number) => {
+        return Math.round(scoreValue * 20);
+    };
+
+    const averagePercentage = (scoreValue: number[]) => {
+        let sum = 0;
+        if (scoreValue.length > 0) {
+            for (const score of scoreValue) {
+                sum = Number(sum) + Number(score);
+            }
+            return Math.round(sum / scoreValue.length);
+        } else {
+            return 0;
+        }
+    };
+
+    const progressAveragePercentage = (value: any, minValue: any, maxValue: any) => {
+        const val = Number(value);
+        const min = Number(minValue);
+        const max = Number(maxValue);
+        const result = ((val - min) / (max - min)) * 100;
+        return Math.round(result);
+
+    };
+
+    const getCompareMeasurements = async (_clientId: any) => {
         setShowNoActivity(false);
 
+        await UserService.getCompareMeasurements(_clientId, 1, 0, 'EnduranceAssessment').then((res: any) => {
+            const allMeasurementData = res.data;
 
-        const cardioScore = 55;
-        const fullBodyScore = 23;
-        const coreScore = 89;
-        const pushScore = 48;
-        const pullScore = 56;
-        const PushToPullScore = 21;
+            //cardio
+            let rowScore = 0;
+            let runScore = 0;
+            let wattBikeScore = 0;
+            const rowScoreRange = { doneText: 0, done: 0 };
+            const runScoreRange = { doneText: 0, done: 0 };
+            const wattBikeScoreRange = { doneText: 0, done: 0 };
 
-        const cardioChartData: EnduranceProgressBarType[] = [
-            { headingIcon: rowIcon, headingText: '2 Km Row', progressValue: 34, progressColor: '#46D7CB', progressText: 'Score', scoreProgressLabel: 'Mins', scoreProgressDone: 25 },
-            { headingIcon: runIcon, headingText: '12 Min Run', progressValue: 58, progressColor: '#46D7CB', progressText: 'Score', scoreProgressLabel: 'Meters', scoreProgressDone: 4028 },
-            { headingIcon: wattBikeIcon, headingText: '3 Min WattBike', progressValue: 86, progressColor: '#46D7CB', progressText: 'Score', scoreProgressLabel: 'Watts', scoreProgressDone: 923 },
-        ];
+            // Full Body
+            let burpressScore = 0;
+            let jackScore = 0;
+            const burpressScoreRange = { doneText: 0, done: 0 };
+            const jackScoreRange = { doneText: 0, done: 0 };
 
-        const fullBodyChartData: EnduranceProgressBarType[] = [
-            { headingIcon: burpeesIcon, headingText: '2 Min Burpees', progressValue: 62, progressColor: '#46D7CB', progressText: 'Score', scoreProgressLabel: 'Count', scoreProgressDone: 62 },
-            { headingIcon: jacksIcon, headingText: '1 Min J Jacks', progressValue: 83, progressColor: '#46D7CB', progressText: 'Score', scoreProgressLabel: 'Count', scoreProgressDone: 83 },
-        ];
+            // Core
+            let bodyHoldScore = 0;
+            const bodyHoldScoreRange = { doneText: 0, done: 0 };
+            //Push
+            let pushUpsScore = 0;
+            let modPushUpsScore = 0;
+            let handStandScore = 0;
+            const pushUpsScoreRange = { doneText: 0, done: 0 };
+            const modPushUpsScoreRange = { doneText: 0, done: 0 };
+            const handStandScoreRange = { doneText: 0, done: 0 };
+            // Pull
+            let pullUpsScore = 0;
+            let modPullUpsaScore = 0;
+            let ausPullUpsScore = 0;
+            const pullUpsScoreRange = { doneText: 0, done: 0 };
+            const modPullUpsaScoreRange = { doneText: 0, done: 0 };
+            const ausPullUpsScoreRange = { doneText: 0, done: 0 };
+            //PushToPull
+            let pushToPullScore = 0;
+            const pushToPullScoreRange = { doneText: 0, done: 0 };
 
-        const coreChartData: EnduranceProgressBarType[] = [
-            { headingIcon: bodyHoldIcon, headingText: 'Body Hold', progressValue: 79, progressColor: '#46D7CB', progressText: 'Score', scoreProgressLabel: 'Seconds', scoreProgressDone: 462 },
-        ];
 
-        const pushChartData: EnduranceProgressBarType[] = [
-            { headingIcon: pushUpsIcon, headingText: 'Push Ups', progressValue: 34, progressColor: '#46D7CB', progressText: 'Score', scoreProgressLabel: 'Count', scoreProgressDone: 25 },
-            { headingIcon: modPushUpsIcon, headingText: 'Mod. Push Ups', progressValue: 58, progressColor: '#46D7CB', progressText: 'Score', scoreProgressLabel: 'Count', scoreProgressDone: 4028 },
-            { headingIcon: handStandIcon, headingText: 'Handstand', progressValue: 86, progressColor: '#46D7CB', progressText: 'Score', scoreProgressLabel: 'Seconds', scoreProgressDone: 923 },
-        ];
+            if (allMeasurementData.length > 0) {
+                for (const measurement of allMeasurementData) {
+                    for (const groups of measurement.groups) {
+                        for (const groupData of groups.data) {
+                            switch (groupData.key) {
+                                //•	Cardio
+                                case '2KmRowScore':
+                                    rowScore = scoreToPercentage(groupData.value);
+                                    break;
+                                case '2KmRowTest':
+                                    rowScoreRange.doneText = Number(groupData.value);
+                                    rowScoreRange.done = progressAveragePercentage(groupData.value, groupData.minValue, groupData.maxValue);
+                                    break;
+                                case '12MinRunScore':
+                                    runScore = scoreToPercentage(groupData.value);
+                                    break;
+                                case '12MinRunTest':
+                                    runScoreRange.doneText = Number(groupData.value);
+                                    runScoreRange.done = progressAveragePercentage(groupData.value, groupData.minValue, groupData.maxValue);
+                                    break;
+                                case '3MinWattBikeScore':
+                                    wattBikeScore = scoreToPercentage(groupData.value);
+                                    break;
+                                case '3MinWattBikeTest':
+                                    wattBikeScoreRange.doneText = Number(groupData.value);
+                                    wattBikeScoreRange.done = progressAveragePercentage(groupData.value, groupData.minValue, groupData.maxValue);
+                                    break;
 
-        const pullChartData: EnduranceProgressBarType[] = [
-            { headingIcon: pullUpsIcon, headingText: 'Pull Ups', progressValue: 34, progressColor: '#46D7CB', progressText: 'Score', scoreProgressLabel: 'Count', scoreProgressDone: 25 },
-            { headingIcon: ausPullUpsIcon, headingText: 'Aus. Pull Ups', progressValue: 58, progressColor: '#46D7CB', progressText: 'Score', scoreProgressLabel: 'Count', scoreProgressDone: 4028 },
-            { headingIcon: modAusPullUpsIcon, headingText: 'Mod. Aus. Pull Ups', progressValue: 86, progressColor: '#46D7CB', progressText: 'Score', scoreProgressLabel: 'Seconds', scoreProgressDone: 923 },
-        ];
+                                //Full Body
+                                case '2MinBurpeeScore':
+                                    burpressScore = scoreToPercentage(groupData.value);
+                                    break;
+                                case '2MinBurpeeTest':
+                                    burpressScoreRange.doneText = Number(groupData.value);
+                                    burpressScoreRange.done = progressAveragePercentage(groupData.value, groupData.minValue, groupData.maxValue);
+                                    break;
+                                case '1MinJumpingJackScore':
+                                    jackScore = scoreToPercentage(groupData.value);
+                                    break;
+                                case '1MinJumpingJackTest':
+                                    jackScoreRange.doneText = Number(groupData.value);
+                                    jackScoreRange.done = progressAveragePercentage(groupData.value, groupData.minValue, groupData.maxValue);
+                                    break;
+                                // Core
+                                case 'HollowBodyHoldScore':
+                                    bodyHoldScore = scoreToPercentage(groupData.value);
+                                    break;
+                                case 'HollowBodyHold':
+                                    bodyHoldScoreRange.doneText = Number(groupData.value);
+                                    bodyHoldScoreRange.done = progressAveragePercentage(groupData.value, groupData.minValue, groupData.maxValue);
+                                    break;
+                                //Push
+                                case 'PushUpsScore':
+                                    pushUpsScore = scoreToPercentage(groupData.value);
+                                    break;
+                                case 'PushUps':
+                                    pushUpsScoreRange.doneText = Number(groupData.value);
+                                    pushUpsScoreRange.done = progressAveragePercentage(groupData.value, groupData.minValue, groupData.maxValue);
+                                    break;
+                                case 'ModifiedPushUpsScore':
+                                    modPushUpsScore = scoreToPercentage(groupData.value);
+                                    break;
+                                case 'ModifiedPushUps':
+                                    modPushUpsScoreRange.doneText = Number(groupData.value);
+                                    modPushUpsScoreRange.done = progressAveragePercentage(groupData.value, groupData.minValue, groupData.maxValue);
+                                    break;
+                                case 'HandStandScore':
+                                    handStandScore = scoreToPercentage(groupData.value);
+                                    break;
+                                case 'HandStand':
+                                    handStandScoreRange.doneText = Number(groupData.value);
+                                    handStandScoreRange.done = progressAveragePercentage(groupData.value, groupData.minValue, groupData.maxValue);
+                                    break;
+                                //Pull
+                                case 'PullUpsScore':
+                                    pullUpsScore = scoreToPercentage(groupData.value);
+                                    break;
+                                case 'PullUps':
+                                    pullUpsScoreRange.doneText = Number(groupData.value);
+                                    pullUpsScoreRange.done = progressAveragePercentage(groupData.value, groupData.minValue, groupData.maxValue);
+                                    break;
+                                case 'AustralianPullUpsScore':
+                                    ausPullUpsScore = scoreToPercentage(groupData.value);
+                                    break;
+                                case 'AustralianPullUps':
+                                    ausPullUpsScoreRange.doneText = Number(groupData.value);
+                                    ausPullUpsScoreRange.done = progressAveragePercentage(groupData.value, groupData.minValue, groupData.maxValue);
+                                    break;
+                                case 'ModifiedAustralianPullUpsScore':
+                                    modPullUpsaScore = scoreToPercentage(groupData.value);
+                                    break;
+                                case 'ModifiedAustralianPullUps':
+                                    modPullUpsaScoreRange.doneText = Number(groupData.value);
+                                    modPullUpsaScoreRange.done = progressAveragePercentage(groupData.value, groupData.minValue, groupData.maxValue);
+                                    break;
+                                //Push-to-Pull
+                                case 'PushToPullScore':
+                                    pushToPullScore = scoreToPercentage(groupData.value);
+                                    break;
+                                case 'PushToPull':
+                                    pushToPullScoreRange.doneText = Number(groupData.value);
+                                    pushToPullScoreRange.done = progressAveragePercentage(groupData.value, groupData.minValue, groupData.maxValue);
+                                    break;
 
-        const pushToPullChartData: EnduranceProgressBarType[] = [
-            { headingIcon: pushToPullRatioIcon, headingText: 'Push-to-Pull Ratio', progressValue: 79, progressColor: '#46D7CB', progressText: 'Score', scoreProgressLabel: 'Ratio', scoreProgressDone: 462 },
-        ];
+                            }
+                        }
+                    }
+                }
 
-        const pillars = [
-            { 'id': 1, 'name': 'Cardio', 'score': cardioScore, chartData: cardioChartData },
-            { 'id': 2, 'name': 'Full Body', 'score': fullBodyScore, chartData: fullBodyChartData },
-            { 'id': 3, 'name': 'Core', 'score': coreScore, chartData: coreChartData },
-            { 'id': 4, 'name': 'Push', 'score': pushScore, chartData: pushChartData },
-            { 'id': 5, 'name': 'Pull', 'score': pullScore, chartData: pullChartData },
-            { 'id': 6, 'name': 'Push-to-pull', 'score': PushToPullScore, chartData: pushToPullChartData }];
+                const cardioScore = averagePercentage([rowScore, runScore, wattBikeScore]);
+                const fullBodyScore = averagePercentage([burpressScore, jackScore]);
+                const coreScore = averagePercentage([bodyHoldScore]);
+                const pushScore = averagePercentage([pushUpsScore, modPushUpsScore, handStandScore]);
+                const pullScore = averagePercentage([pullUpsScore, modPullUpsaScore, ausPullUpsScore]);
+                const PushToPullScore = averagePercentage([pushToPullScore]);
 
-        setPillarScores(pillars);
+                const cardioChartData: EnduranceProgressBarType[] = [
+                    { headingIcon: rowIcon, headingText: '2 Km Row', progressValue: rowScore, progressColor: '#46D7CB', progressText: 'Score', scoreProgressLabel: 'Mins', scoreProgressDone: rowScoreRange },
+                    { headingIcon: runIcon, headingText: '12 Min Run', progressValue: runScore, progressColor: '#46D7CB', progressText: 'Score', scoreProgressLabel: 'Meters', scoreProgressDone: runScoreRange },
+                    { headingIcon: wattBikeIcon, headingText: '3 Min WattBike', progressValue: wattBikeScore, progressColor: '#46D7CB', progressText: 'Score', scoreProgressLabel: 'Watts', scoreProgressDone: wattBikeScoreRange },
+                ];
+
+                const fullBodyChartData: EnduranceProgressBarType[] = [
+                    { headingIcon: burpeesIcon, headingText: '2 Min Burpees', progressValue: burpressScore, progressColor: '#46D7CB', progressText: 'Score', scoreProgressLabel: 'Count', scoreProgressDone: burpressScoreRange },
+                    { headingIcon: jacksIcon, headingText: '1 Min J Jacks', progressValue: jackScore, progressColor: '#46D7CB', progressText: 'Score', scoreProgressLabel: 'Count', scoreProgressDone: jackScoreRange },
+                ];
+
+                const coreChartData: EnduranceProgressBarType[] = [
+                    { headingIcon: bodyHoldIcon, headingText: 'Body Hold', progressValue: bodyHoldScore, progressColor: '#46D7CB', progressText: 'Score', scoreProgressLabel: 'Seconds', scoreProgressDone: bodyHoldScoreRange },
+                ];
+
+                const pushChartData: EnduranceProgressBarType[] = [
+                    { headingIcon: pushUpsIcon, headingText: 'Push Ups', progressValue: pushUpsScore, progressColor: '#46D7CB', progressText: 'Score', scoreProgressLabel: 'Count', scoreProgressDone: pushUpsScoreRange },
+                    { headingIcon: modPushUpsIcon, headingText: 'Mod. Push Ups', progressValue: modPushUpsScore, progressColor: '#46D7CB', progressText: 'Score', scoreProgressLabel: 'Count', scoreProgressDone: modPushUpsScoreRange },
+                    { headingIcon: handStandIcon, headingText: 'Handstand', progressValue: handStandScore, progressColor: '#46D7CB', progressText: 'Score', scoreProgressLabel: 'Seconds', scoreProgressDone: handStandScoreRange },
+                ];
+
+                const pullChartData: EnduranceProgressBarType[] = [
+                    { headingIcon: pullUpsIcon, headingText: 'Pull Ups', progressValue: pullUpsScore, progressColor: '#46D7CB', progressText: 'Score', scoreProgressLabel: 'Count', scoreProgressDone: pullUpsScoreRange },
+                    { headingIcon: ausPullUpsIcon, headingText: 'Aus. Pull Ups', progressValue: ausPullUpsScore, progressColor: '#46D7CB', progressText: 'Score', scoreProgressLabel: 'Count', scoreProgressDone: ausPullUpsScoreRange },
+                    { headingIcon: modAusPullUpsIcon, headingText: 'Mod. Aus. Pull Ups', progressValue: modPullUpsaScore, progressColor: '#46D7CB', progressText: 'Score', scoreProgressLabel: 'Seconds', scoreProgressDone: modPullUpsaScoreRange },
+                ];
+
+                const pushToPullChartData: EnduranceProgressBarType[] = [
+                    { headingIcon: pushToPullRatioIcon, headingText: 'Push-to-Pull Ratio', progressValue: pushToPullScore, progressColor: '#46D7CB', progressText: 'Score', scoreProgressLabel: 'Ratio', scoreProgressDone: pushToPullScoreRange },
+                ];
+
+                const pillars = [
+                    { 'id': 1, 'name': 'Cardio', 'score': cardioScore, chartData: cardioChartData },
+                    { 'id': 2, 'name': 'Full Body', 'score': fullBodyScore, chartData: fullBodyChartData },
+                    { 'id': 3, 'name': 'Core', 'score': coreScore, chartData: coreChartData },
+                    { 'id': 4, 'name': 'Push', 'score': pushScore, chartData: pushChartData },
+                    { 'id': 5, 'name': 'Pull', 'score': pullScore, chartData: pullChartData },
+                    { 'id': 6, 'name': 'Push-to-pull', 'score': PushToPullScore, chartData: pushToPullChartData }];
+
+                setPillarScores(pillars);
+
+
+
+            } else {
+                setShowNoActivity(true);
+            }
+        });
+
+
+
     };
 
     useEffect(() => {

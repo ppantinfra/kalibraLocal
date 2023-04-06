@@ -11,7 +11,7 @@ const ResultSummaryScreen = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const [assessment, setAssessment] = useState<any>('');
-
+    const [bloodworkId, setBloodworkId] = useState<any>('');
 
     useEffect(() => {
         const states: any = location?.state;
@@ -22,14 +22,23 @@ const ResultSummaryScreen = () => {
             if (states?.assessment) { //this is called when user open page through navigation
                 setAssessment(states?.assessment);
             }
+            if (states?.bloodworkId) {
+                setBloodworkId(states?.bloodworkId);
+            }
         }
     }, [location?.state, navigate]);
 
     return (
         <React.Fragment>
             <ClientSearch selectedUserId={userId} />
-            <Back componentTitle={screenTitle.ResultSummaryPage} bloodworkMeasuredDate={assessment.measuredDate} />
-
+            <Back componentTitle={screenTitle.ResultSummaryPage} bloodworkMeasuredDate={assessment.measuredDate} btnBackHandler={() => {
+                navigate(`/${route.BLOODWORK}`, {
+                    state: {
+                        bloodworkId: bloodworkId
+                    }
+                });
+            }}
+            />
             {assessment && <ResultSummery assessment={assessment} />}
 
         </React.Fragment>

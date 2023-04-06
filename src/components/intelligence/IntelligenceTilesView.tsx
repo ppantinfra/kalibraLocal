@@ -75,6 +75,7 @@ const useStyles = makeStyles({
     columnGap: '5px',
     '& .pillarIconChip': {
       height: '20px',
+      padding: '2px 6px 2px 6px !impotant'
     },
 
     '& .MuiSvgIcon-root': {

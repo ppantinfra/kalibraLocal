@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { useEditProfileScreenStyles } from './EditProfileScreenStyles';
 import Box from '@mui/material/Box';
 import InputLabel from '@mui/material/InputLabel';
@@ -25,12 +25,12 @@ import {
   RadioField,
   CustomDatePicker
 } from '../../components/common';
-// import { MenuItem, Select } from '@mui/material';
-
-
+import { setWebPushSubscription, isWebPushNotificationsSupported, isWebPushNotificationsEnabled } from '../../api/WebPushAPI';
 
 const EditProfileScreen = () => {
   const classes = useEditProfileScreenStyles();
+  const [enableNotifications, setEnableNotifications] = useState<boolean>(false);
+  const [isPNSupported, setIsPNSupported] = useState<boolean>(false);
   const [openSnackBar, setOpenSnackBar] = useState<boolean>(false);
   const [snackBarMessage, setSnackBarMessage] = useState<string>('');
   const [isError, setIsError] = useState<boolean>(false);
@@ -66,6 +66,17 @@ const EditProfileScreen = () => {
       return true;
     }
   };
+
+  const loadData = async () => {
+    const isSupported: boolean = await isWebPushNotificationsSupported();
+    setIsPNSupported(isSupported);
+    const enabled: boolean = await isWebPushNotificationsEnabled();
+    setEnableNotifications(enabled);
+  };
+
+  useEffect(() => {
+    loadData();
+  }, []);
 
 
   // useEffect(() => {
@@ -181,7 +192,7 @@ const EditProfileScreen = () => {
                       controlName={'email'}
                       register={register}
                       errors={errors}
-                      rules={{ required: true, pattern: pattern.EmailPattern }}
+                      rules={{ required: true, pattern: pattern.EmailPattern, maxLength: 255 }}
                       defaultValue={userData?.email}
                       disabled={true}
                     />
@@ -193,7 +204,7 @@ const EditProfileScreen = () => {
                       controlName={'name'}
                       register={register}
                       errors={errors}
-                      rules={{ required: true }}
+                      rules={{ required: true, maxLength: 255 }}
                       defaultValue={userData?.name}
                     />
                   </Box>
@@ -204,7 +215,7 @@ const EditProfileScreen = () => {
                       controlName={'nickname'}
                       register={register}
                       errors={errors}
-                      rules={{ required: true }}
+                      rules={{ required: true, maxLength: 255 }}
                       defaultValue={userData?.nickname}
                     />
                   </Box>
@@ -285,7 +296,7 @@ const EditProfileScreen = () => {
                       controlName={'jobTitle'}
                       register={register}
                       errors={errors}
-                      rules={{ required: true }}
+                      rules={{ required: true, maxLength: 255 }}
                       defaultValue={userData?.jobTitle}
                     />
                   </Box>
@@ -306,6 +317,25 @@ const EditProfileScreen = () => {
                       inputProps={{ 'aria-label': 'controlled' }}
                     />
                   </Box>}
+
+                  {isPNSupported === true &&
+                    <Box className={classes.formGroupField}>
+                      <InputLabel
+                        htmlFor="switch-label"
+                        className={classes.labelClassName}
+                      >
+                        Notifications
+                    </InputLabel>
+                      <Switch
+                        checked={enableNotifications}
+                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                          setEnableNotifications(event.target.checked);
+                          setWebPushSubscription(event.target.checked);
+                        }}
+                        inputProps={{ 'aria-label': 'controlled' }}
+                      />
+                    </Box>
+                  }
 
                 </Box>
 

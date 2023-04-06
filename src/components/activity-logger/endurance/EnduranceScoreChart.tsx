@@ -106,7 +106,7 @@ const EnduranceScoreChart = ({
                 radius={({ datum }) => datum.radius}
                 innerRadius={innerRadiusBase}
                 data={data}
-                // style={{ data: { cursor: 'pointer' }, parent: { touchAction: 'none', backgroundColor: 'pink' } }}
+                style={{ data: { cursor: 'pointer' } }}
                 events={
                     [
                         {

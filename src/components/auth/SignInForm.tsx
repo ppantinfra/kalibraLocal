@@ -67,7 +67,7 @@ const SignInFrom: React.FC<SignInProps> = (props) => {
             controlName={'email'}
             register={register}
             errors={errors}
-            rules={{ required: true, pattern: pattern.EmailPattern }}
+            rules={{ required: true, pattern: pattern.EmailPattern, maxLength: 255 }}
           />
         </Box>
         {/* {props.emailTextError ? <ErrorMessage errorMessage={props.emailTextError} /> : ''} */}
@@ -100,7 +100,8 @@ const SignInFrom: React.FC<SignInProps> = (props) => {
               required: true,
               validate: {
                 checkPassword: (v: any) => props.passwordCheck(v) || props.passwordErrorMsg
-              }
+              },
+              maxLength: 255
             }}
             inputIndormentElement={
               <IconButton

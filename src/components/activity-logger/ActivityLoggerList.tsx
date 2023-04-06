@@ -207,11 +207,13 @@ const SetFormArray = ({
                   className="formControl"
                   variant="outlined"
                   arrayName={arrayName}
+                  rules={{ maxLength: 255 }}
                   type="number"
                   controlName={`userActivityLogs.${mainIndex}.userActivityLogSets.${index}.exerciseLoad`}
                   register={register}
                   errors={errors}
-                  rules={{ required: true }}
+                  // rules={{ required: true }}
+                  placeholder='0'
                   classes={propsClasses}
                   blurHandler={(event) =>
                     changeHandler(mainIndex, allFields, index, event.target.value, 'exerciseLoad')
@@ -229,11 +231,13 @@ const SetFormArray = ({
                   nestedControlName="rep"
                   nestedArrayName="userActivityLogSets"
                   arrayName={arrayName}
+                  rules={{ maxLength: 255 }}
                   type="number"
                   controlName={`userActivityLogs.${mainIndex}.userActivityLogSets.${index}.rep`}
                   register={register}
                   errors={errors}
-                  rules={{ required: true }}
+                  // rules={{ required: true }}
+                  placeholder='0'
                   blurHandler={(event) => changeHandler(mainIndex, allFields, index, event.target.value, 'rep')}
                   noValidate={true}
                 />
@@ -248,11 +252,13 @@ const SetFormArray = ({
                   className="formControl"
                   variant="outlined"
                   arrayName={arrayName}
+                  rules={{ maxLength: 255 }}
                   type="number"
                   controlName={`userActivityLogs.${mainIndex}.userActivityLogSets.${index}.rpe`}
                   register={register}
                   errors={errors}
-                  rules={{ required: true }}
+                  // rules={{ required: true }}
+                  placeholder='0'
                   blurHandler={(event) => changeHandler(mainIndex, allFields, index, event.target.value, 'rpe')}
                   noValidate={true}
                 />
@@ -337,9 +343,9 @@ const SetFormArray = ({
                   append({
                     userActivityLogSetId: '0',
                     set: '',
-                    exerciseLoad: 0,
-                    rep: 0,
-                    rpe: 0,
+                    exerciseLoad: '',
+                    rep: '',
+                    rpe: null,
                     restId: null,
                     tempoId: null,
                     isDataChange: true
@@ -477,11 +483,52 @@ const ActivityLoggerList = ({
 
   const onSubmit = async (data: any) => {
     let isUpdateCase = false;
-    for (const logs of data.userActivityLogs) {
-      if (!logs.exerciseId || !logs.focusId) {
+    const logsToSave: any = [];
+    for (let mainIndex = 0; mainIndex < data.userActivityLogs.length; mainIndex++) {
+      const logs = data.userActivityLogs[mainIndex];
+      if (logs.exerciseId && logs.focusId) {
+        const logSets = logs?.userActivityLogSets;
+
+        for (let i = 0; i < logSets.length; i++) {
+          const index = i + 1;
+          const mainIndexToShow = mainIndex + 1;
+
+          if (!logSets[i].exerciseLoad) {
+            setIsError(true);
+            setOpenSnackBar(true);
+            setSnackBarMessage('Please Fill Load value of set ' + index + ' of Excercise No ' + mainIndexToShow);
+            return;
+          }
+          if (!logSets[i].rep) {
+            setIsError(true);
+            setOpenSnackBar(true);
+            setSnackBarMessage('Please Fill Rep value of set ' + index + ' of Excercise No ' + mainIndexToShow);
+            return;
+          }
+
+        }
+        logsToSave.push(logs);
+      } else {
+        const logSets = logs?.userActivityLogSets;
+
+        for (let i = 0; i < logSets.length; i++) {
+          const mainIndexToShow = mainIndex + 1;
+
+          if (logSets[i].exerciseLoad || logSets[i].rep || logSets[i].rpe || logSets[i].restId || logSets[i].tempoId) {
+            setIsError(true);
+            setOpenSnackBar(true);
+            setSnackBarMessage('Please Fill Excercise & Focus of Excercise No ' + mainIndexToShow);
+            return;
+          }
+
+        }
+      }
+
+
+      if (logsToSave.length === 0) {
         setIsError(true);
         setOpenSnackBar(true);
-        setSnackBarMessage('Please select Focus and Excercise  Values');
+        setSnackBarMessage('Please Select Excercise and Focus value of any one of the logs to proceed.');
         return;
       }
       if (logs.userActivityLogId !== '0') {
@@ -495,7 +542,8 @@ const ActivityLoggerList = ({
       await WorkoutService.deleteActivityLogs(queryParam, deleteActivityLogs);
     }
 
-    const array = data?.userActivityLogs;
+    // const array = data?.userActivityLogs;
+    const array = logsToSave;
     array.forEach((object) => {
       delete object.excerciseDropdownValues;
       delete object.focusDropdownValues;
